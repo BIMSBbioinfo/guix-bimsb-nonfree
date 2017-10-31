@@ -32,6 +32,7 @@
   #:use-module (guix build-system r)
   #:use-module (gnu packages)
   #:use-module (gnu packages admin)
+  #:use-module (gnu packages algebra)
   #:use-module (gnu packages autotools)
   #:use-module (gnu packages base)
   #:use-module (gnu packages bioinformatics)
@@ -1434,3 +1435,67 @@ a gene's exons may be assembled.  It enhances gene models using
 evidence from next-generation sequencing and EST alignments.")
     ;; No license specified
     (license nonfree:undeclared)))
+
+(define-public cufflinks
+  (package
+    (name "cufflinks")
+    (version "2.2.1")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append "http://cole-trapnell-lab.github.io/"
+                                  "cufflinks/assets/downloads/cufflinks-"
+                                  version ".tar.gz"))
+              (sha256
+               (base32
+                "1bnm10p8m7zq4qiipjhjqb24csiqdm1pwc8c795z253r2xk6ncg8"))))
+    (build-system gnu-build-system)
+    (arguments
+     `(#:make-flags
+       (list
+        ;; The includes for "eigen" are located in a subdirectory.
+        (string-append "EIGEN_CPPFLAGS="
+                       "-I" (assoc-ref %build-inputs "eigen")
+                       "/include/eigen3/")
+        ;; Cufflinks must be linked with various boost libraries.
+        (string-append "LDFLAGS="
+                       (string-join '("-lboost_system"
+                                      "-lboost_serialization"
+                                      "-lboost_thread"))))
+       #:phases
+       (modify-phases %standard-phases
+         (add-after 'unpack 'fix-search-for-bam
+           (lambda _
+             (substitute* '("ax_bam.m4"
+                            "configure"
+                            "src/hits.h")
+               (("<bam/sam\\.h>") "<samtools/sam.h>")
+               (("<bam/bam\\.h>") "<samtools/bam.h>")
+               (("<bam/version\\.hpp>") "<samtools/version.h>"))
+             #t)))
+       #:configure-flags
+       (list (string-append "--with-bam="
+                            (assoc-ref %build-inputs "samtools")))))
+    (inputs
+     `(("eigen" ,eigen)
+       ("samtools" ,samtools-0.1)
+       ("htslib" ,htslib)
+       ("boost" ,boost-1.58) ; FIXME a bug in 1.64 breaks compilation
+       ("python" ,python-2)
+       ("zlib" ,zlib)))
+    (home-page "http://cole-trapnell-lab.github.io/cufflinks/")
+    (synopsis "Transcriptome assembly and RNA-Seq expression analysis")
+    (description
+     "Cufflinks assembles RNA transcripts, estimates their abundances,
+and tests for differential expression and regulation in RNA-Seq
+samples.  It accepts aligned RNA-Seq reads and assembles the
+alignments into a parsimonious set of transcripts.  Cufflinks then
+estimates the relative abundances of these transcripts based on how
+many reads support each one, taking into account biases in library
+preparation protocols.")
+    ;; The sources include a modified third-party library "locfit"
+    ;; that is released under a license asking any use for benchmarks
+    ;; to be authorized.  A GPL version of locfit (by the same author)
+    ;; exists in the form of "r-locfit", but it cannot be used without
+    ;; modifications.
+    (license (list license:boost1.0
+                   (nonfree:non-free "Not to be used for benchmarks")))))
