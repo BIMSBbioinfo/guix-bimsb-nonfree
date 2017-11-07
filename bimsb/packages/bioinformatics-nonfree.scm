@@ -1479,9 +1479,11 @@ evidence from next-generation sequencing and EST alignments.")
      `(("eigen" ,eigen)
        ("samtools" ,samtools-0.1)
        ("htslib" ,htslib)
-       ("boost" ,boost-1.58) ; FIXME a bug in 1.64 breaks compilation
+       ("boost" ,boost-1.55)
        ("python" ,python-2)
        ("zlib" ,zlib)))
+    (native-inputs
+     `(("gcc" ,gcc-4.9)))
     (home-page "http://cole-trapnell-lab.github.io/cufflinks/")
     (synopsis "Transcriptome assembly and RNA-Seq expression analysis")
     (description
