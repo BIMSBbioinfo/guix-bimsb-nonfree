@@ -1411,31 +1411,6 @@ experiments.")
       ;; https://github.com/gersteinlab/MUSIC/issues/6
       (license nonfree:undeclared))))
 
-(define-public python2-splicegrapher
-  (package
-    (name "python2-splicegrapher")
-    (version "0.2.5")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append "mirror://sourceforge/splicegrapher/"
-                                  "SpliceGrapher-" version ".tgz"))
-              (sha256
-               (base32
-                "1p2z4r08nj4kzmpa8ilx23q2mavxd6ycq25nibgb5d4m64x76205"))))
-    (build-system python-build-system)
-    (arguments `(#:python ,python-2))   ; python2 only
-    (propagated-inputs
-     `(("python2-matplotlib" ,python2-matplotlib)
-       ("python2-pyml" ,python2-pyml)))
-    (home-page "http://splicegrapher.sourceforge.net")
-    (synopsis "Predict alternative splicing patterns and produce splice graphs")
-    (description "SpliceGrapher predicts alternative splicing patterns
-and produces splice graphs that capture in a single structure the ways
-a gene's exons may be assembled.  It enhances gene models using
-evidence from next-generation sequencing and EST alignments.")
-    ;; No license specified
-    (license nonfree:undeclared)))
-
 (define-public cufflinks
   (package
     (name "cufflinks")
