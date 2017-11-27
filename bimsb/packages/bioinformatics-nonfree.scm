@@ -58,7 +58,6 @@
   #:use-module (gnu packages web)
   #:use-module (gnu packages xml)
   #:use-module (bimsb packages staging)
-  #:use-module (bimsb packages bioinformatics-variants)
   #:use-module (bimsb packages variants))
 
 (define-public bcl2fastq
