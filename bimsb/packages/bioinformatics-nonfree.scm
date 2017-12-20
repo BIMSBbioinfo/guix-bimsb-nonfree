@@ -29,6 +29,7 @@
   #:use-module (guix build-system cmake)
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system python)
+  #:use-module (guix build-system perl)
   #:use-module (guix build-system r)
   #:use-module (gnu packages)
   #:use-module (gnu packages admin)
@@ -1515,3 +1516,30 @@ preparation protocols.")
       (description "RNAseqlib is a simple pipeline for RNA-Seq
 analysis.  It supports mRNA-Seq, Ribo-Seq, and CLIP-Seq analyses.")
       (license nonfree:undeclared))))
+
+(define-public perl-math-cdf
+  (package
+    (name "perl-math-cdf")
+    (version "0.1")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (string-append "mirror://cpan/authors/id/C/CA/CALLAHAN/Math-CDF-"
+                           version ".tar.gz"))
+       (sha256
+        (base32
+         "0ram2brgxlyqszf25s22vram8v2pvkwqrjqkr3f4gkim10jvz5kq"))))
+    (build-system perl-build-system)
+    (home-page "http://search.cpan.org/dist/Math-CDF/")
+    (synopsis "Generate probabilities and quantiles from several statistical probability functions")
+    (description "This module provides a perl interface to the
+DCDFLIB.  Functions are available for 7 continuous
+distributions (Beta, Chi-square, F, Gamma, Normal, Poisson and
+T-distribution) and for two discrete distributions (Binomial and
+Negative Binomial).  Optional non-centrality parameters are available
+for the Chi-square, F and T-distributions.  Cumulative probabilities
+are available for all 9 distributions and quantile functions are
+available for the 7 continuous distributions.")
+    ;; Parts of the original library are public domain.  Others are
+    ;; non-commercial only.  It is unclear which is which.
+    (license nonfree:undeclared)))
