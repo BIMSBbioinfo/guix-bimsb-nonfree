@@ -1543,3 +1543,7 @@ available for the 7 continuous distributions.")
     ;; Parts of the original library are public domain.  Others are
     ;; non-commercial only.  It is unclear which is which.
     (license nonfree:undeclared)))
+
+;; For harm
+(define-public perl5.24-math-cdf
+  (package-for-other-perl perl-5.24 perl-math-cdf))
