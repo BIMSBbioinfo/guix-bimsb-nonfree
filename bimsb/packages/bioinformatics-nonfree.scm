@@ -141,6 +141,29 @@ demultiplex data and convert BCL files to FASTQ files.")
 be better to avoid using this proprietary program.  I encourage people
 to write a free software alternative rather than using this tool."))))
 
+(define-public bcl2fastq-latest
+  (package (inherit bcl2fastq)
+    (version "2.20.0")
+    (source (origin
+              (method url-fetch)
+              ;; Download manually from here:
+              ;; ftp://webdata2:webdata2@ussd-ftp.illumina.com/downloads/software/bcl2fastq/bcl2fastq2-v2-20-0-tar.zip
+              (uri (string-append "file:///gnu/remote/bcl2fastq2-v"
+                                  (string-join (string-split version #\.) "-")
+                                  "-tar.zip"))
+              (sha256
+               (base32
+                "1qqz217ipsv5wq28wd5pp3jl870i5dbdxq3dwi6ali6hcx3h9lwd"))))
+    (arguments
+     (substitute-keyword-arguments (package-arguments bcl2fastq)
+       ((#:phases phases)
+        `(modify-phases ,phases
+           (replace 'unpack
+             (lambda* (#:key source #:allow-other-keys)
+               (invoke "unzip" source)
+               (invoke "tar" "-xvf"
+                       "bcl2fastq2-v2.20.0.422-Source.tar.gz")))))))))
+
 (define-public bcl2fastq1
   (package (inherit bcl2fastq)
     (name "bcl2fastq1")
