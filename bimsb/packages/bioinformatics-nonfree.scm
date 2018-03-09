@@ -156,6 +156,12 @@ to write a free software alternative rather than using this tool."))))
                 "1qqz217ipsv5wq28wd5pp3jl870i5dbdxq3dwi6ali6hcx3h9lwd"))))
     (arguments
      (substitute-keyword-arguments (package-arguments bcl2fastq)
+       ((#:configure-flags flags)
+        `(list (string-append "-DBCL2FASTQ_VERSION:STRING=" ,version)
+               "-DBCL2FASTQ_NAME_SHORT:STRING=bcl2fastq"
+               "-DBCL2FASTQ_NAME_LONG:STRING=BCL to FASTQ file converter"
+               "-DBCL2FASTQ_COPYRIGHT:STRING=Copyright (c) 2007-2018 Illumina, Inc."
+               (string-append "-DBCL2FASTQ_SOURCE_DIR:STRING=" (getcwd) "/bcl2fastq/src")))
        ((#:phases phases)
         `(modify-phases ,phases
            (replace 'unpack
