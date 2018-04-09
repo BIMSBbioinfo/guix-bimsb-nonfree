@@ -1,5 +1,5 @@
 ;;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2015, 2016, 2017 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
+;;; Copyright © 2015, 2016, 2017, 2018 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
 ;;; Copyright © 2017 CM Massimo <carlomaria.massimo@mdc-berlin.de>
 ;;;
 ;;; This file is NOT part of GNU Guix, but is supposed to be used with GNU
@@ -168,7 +168,16 @@ to write a free software alternative rather than using this tool."))))
              (lambda* (#:key source #:allow-other-keys)
                (invoke "unzip" source)
                (invoke "tar" "-xvf"
-                       "bcl2fastq2-v2.20.0.422-Source.tar.gz")))))))))
+                       "bcl2fastq2-v2.20.0.422-Source.tar.gz")
+               (substitute* "bcl2fastq/src/cxx/include/common/Logger.hh"
+                 (("#include <ios>" m)
+                  (string-append m "\n#include <iostream>")))
+               #t))
+           (add-after 'install 'rename-/bin/test
+             (lambda* (#:key outputs #:allow-other-keys)
+               (rename-file (string-append (assoc-ref outputs "out") "/bin/test")
+                            (string-append (assoc-ref outputs "out") "/bin/bcl2fastq-test"))
+               #t))))))))
 
 (define-public bcl2fastq1
   (package (inherit bcl2fastq)
