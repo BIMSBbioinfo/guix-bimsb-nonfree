@@ -44,6 +44,7 @@
   #:use-module (gnu packages file)
   #:use-module (gnu packages gcc)
   #:use-module (gnu packages ghostscript)
+  #:use-module (gnu packages graph)
   #:use-module (gnu packages image)
   #:use-module (gnu packages machine-learning)
   #:use-module (gnu packages maths)
@@ -1585,3 +1586,47 @@ available for the 7 continuous distributions.")
 ;; For harm
 (define-public perl5.24-math-cdf
   (package-for-other-perl perl-5.24 perl-math-cdf))
+
+;; Missing license; see https://github.com/velocyto-team/velocyto.R/issues/24
+(define-public r-velocyto
+  (let ((commit "ca19f83c947b2e5f5e8484311b30f3c759fa069a")
+        (revision "1"))
+    (package
+      (name "r-velocyto")
+      (version (string-append "0.5-" revision "." (string-take commit 7)))
+      (source
+       (origin
+         (method git-fetch)
+         (uri (git-reference
+               (url "https://github.com/velocyto-team/velocyto.R.git")
+               (commit commit)))
+         (file-name (string-append name "-" version "-checkout"))
+         (sha256
+          (base32
+           "1faahnf6msql8bfwq7346ibh3lqmx2qlqnykk06n6xsy1xyj6pf8"))))
+      (build-system r-build-system)
+      (inputs
+       `(("boost" ,boost)))
+      (propagated-inputs
+       `(("r-mass" ,r-mass)
+         ("r-mgcv" ,r-mgcv)
+         ("r-pcamethods" ,r-pcamethods)
+         ("r-rcpp" ,r-rcpp)
+         ("r-rcpparmadillo" ,r-rcpparmadillo)
+         ;; Suggested packages
+         ("r-rtsne" ,r-rtsne)
+         ("r-cluster" ,r-cluster)
+         ("r-abind" ,r-abind)
+         ("r-h5" ,r-h5)
+         ("r-biocgenerics" ,r-biocgenerics)
+         ("r-genomicalignments" ,r-genomicalignments)
+         ("r-rsamtools" ,r-rsamtools)
+         ("r-edger" ,r-edger)
+         ("r-igraph" ,r-igraph)))
+      (home-page "http://velocyto.org")
+      (synopsis "RNA velocity estimation in R")
+      (description
+       "This package provides basic routines for estimation of
+gene-specific transcriptional derivatives and visualization of the
+resulting velocity patterns.")
+      (license nonfree:undeclared))))
