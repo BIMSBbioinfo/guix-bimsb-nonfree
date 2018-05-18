@@ -1630,3 +1630,19 @@ available for the 7 continuous distributions.")
 gene-specific transcriptional derivatives and visualization of the
 resulting velocity patterns.")
       (license nonfree:undeclared))))
+
+;; Bismark currently includes nonfree JavaScript
+(define-public bismark-nonfree
+  (package (inherit bismark)
+    (name "bismark-nonfree")
+    (version (package-version bismark))
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/FelixKrueger/Bismark.git")
+             (commit version)))
+       (file-name (string-append name "-" version "-checkout"))
+       (sha256
+        (base32
+         "0yb5l36slwg02fp4b1jdlplgljcsxgqfzvzihzdnphd87dghcc84"))))))
