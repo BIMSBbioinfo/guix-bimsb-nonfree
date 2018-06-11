@@ -249,6 +249,7 @@ to write a free software alternative rather than using this tool."))))
 (define-public bowtie1
   (package
     (inherit bowtie)
+    (name "bowtie1")
     (version "1.1.2")
     (source (origin
               (method url-fetch)
