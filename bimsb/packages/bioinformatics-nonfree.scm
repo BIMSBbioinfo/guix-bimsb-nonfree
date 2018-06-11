@@ -99,6 +99,9 @@
                       (substitute* "cxx/lib/io/Xml.cpp"
                         (("xml_writer_make_settings\\(")
                          "xml_writer_make_settings<ptree::key_type>("))
+                      (substitute* "cxx/include/common/Logger.hh"
+                        (("#include <ios>" m)
+                         (string-append "#include <iostream>\n" m)))
                       ;; Do not use bundled libraries
                       (substitute* "cmake/cxxConfigure.cmake"
                         (("\"\\$\\{LIBEXSLT_LIBRARIES\\}\"")
