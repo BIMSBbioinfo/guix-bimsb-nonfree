@@ -1755,3 +1755,61 @@ plotted in terms of a significance landscape plot.  These plots show
 significance profiles for each word studied across the sorted genelist.")
     ;; Contacted the authors; waiting for a reply.
     (license nonfree:undeclared)))
+
+(define-public rsat
+  (package
+    (name "rsat")
+    (version "2018-06-07")
+    (source (origin
+              (method url-fetch)
+              (uri (list (string-append "http://pedagogix-tagc.univ-mrs.fr/"
+                                        "download_rsat/rsat_"
+                                        version ".tar.gz")
+                         (string-append "http://pedagogix-tagc.univ-mrs.fr/"
+                                        "download_rsat/previous_versions/rsat_"
+                                        version ".tar.gz")))
+              (sha256
+               (base32
+                "0zzlfl19ylj06np8hhmkjavv7906nk58ngg5irc37jr03p346l3x"))))
+    (build-system gnu-build-system)
+    (arguments
+     `(#:tests? #f                      ; no test target
+       #:phases
+       (modify-phases %standard-phases
+         (replace 'configure
+           (lambda* (#:key outputs #:allow-other-keys)
+             (let ((out (assoc-ref outputs "out")))
+               ;; Ensure that we can override the target directory
+               (substitute* "perl-scripts/configure_rsat.pl"
+                 (("\\$rsat_parent_path = .*;")
+                  (string-append "$rsat_parent_path = \""
+                                 out "\";")))
+               ;; Override the target directory
+               (setenv "RSAT" out)
+               ;; Target directory must exist
+               (mkdir-p "bin")
+               (invoke "perl" "perl-scripts/configure_rsat.pl"))
+             #t))
+         (replace 'build
+           (lambda _
+             ;; FIXME: this first step is pretty useless, because it
+             ;; creates directories not in the install location but in
+             ;; the build directory.
+             (invoke "make" "-f" "makefiles/init_rsat.mk" "init")
+             (invoke "make" "-f" "makefiles/init_rsat.mk" "compile_all")
+             #t))
+         (replace 'install
+           (lambda* (#:key outputs #:allow-other-keys)
+             (let ((out (assoc-ref outputs "out")))
+               (copy-recursively "bin" (string-append out "/bin"))
+               #t))))))
+    (native-inputs
+     `(("perl" ,perl)))
+    (home-page "http://rsat.eead.csic.es/plants/")
+    (synopsis "Regulatory sequence analysis tools")
+    (description "This package provides a subset of the Regulatory
+Sequence Analysis Tools (RSAT).")
+    (license (nonfree:non-free
+              "The stand-alone version is freely available for academic
+users, with some restrictions on utilization (non-commercial,
+non-military and non-redistribution)."))))
