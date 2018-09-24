@@ -38,6 +38,7 @@
   #:use-module (gnu packages base)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages boost)
+  #:use-module (gnu packages check)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages cran)
   #:use-module (gnu packages documentation)
@@ -1835,3 +1836,49 @@ non-military and non-redistribution)."))))
 information networks (such as gene networks) from data (using mutual
 information). In particular, the package implements MRNET.")
     (license (nonfree:non-free "CC-BY-NC-SA"))))
+
+(define-public python2-mace
+  (package
+    (name "python2-mace")
+    (version "1.2")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append "mirror://sourceforge/chipexo/MACE-"
+                                  version ".tar.gz"))
+              (sha256
+               (base32
+                "0v9qcxqi35hzcb28v29cr6r58dn7197pwzxqxkkqfhsdgpiia2ih"))))
+    (build-system python-build-system)
+    (arguments
+     `(#:python ,python-2               ; only Python 2.7 is supported
+       #:phases
+       (modify-phases %standard-phases
+         (add-after 'unpack 'use-setuptools
+           (lambda _
+             (substitute* "setup.py"
+               (("from distribute_setup.*") "")
+               (("use_setuptools\\(\\)") ""))
+             #t)))))
+    ;; XXX: This bundles sources of other packages, such as pysam, parts of
+    ;; kentutils, bunzip, pymix, bx, tabix, exomodule, etc...
+    (inputs
+     `(("gsl" ,gsl)
+       ("zlib" ,zlib)))
+    (propagated-inputs
+     `(("python-numpy" ,python2-numpy)))
+    (native-inputs
+     `(("python-nose" ,python2-nose)
+       ("python-cython" ,python2-cython)))
+    (home-page "http://chipexo.sourceforge.net")
+    (synopsis "Model-based analysis of ChIP-exo data")
+    (description "ChIP-exo allows for precise mapping of protein-DNA
+interactions.  It uses λ phage exonuclease to digest the 5’ end of
+protein-unbound DNA fragments and thereby creates a homogenous 5’ end at a
+fixed distance from the protein binding location.  After sequencing and
+aligning reads to the reference genome, the 5’ ends of reads align primarily
+at two genomic locations corresponding to two borders of protein binding site.
+MACE is a bioinformatics tool dedicated to analyze ChIP-exo data.")
+    ;; The license is rather unclear.  Some source headers say "MIT license",
+    ;; others say "free for all use", others say "GPL version 1.3" (?), yet
+    ;; others say "Artistic license".
+    (license license:gpl2+)))
