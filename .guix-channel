@@ -1,0 +1,6 @@
+(channel
+ (version 0)
+ (dependencies
+  (channel
+   (name guix-bimsb)
+   (url "https://github.com/BIMSBbioinfo/guix-bimsb"))))
