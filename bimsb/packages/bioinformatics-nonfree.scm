@@ -767,12 +767,6 @@ sequences with a predefined structure (inverse folding) is provided.")
                (base32
                 "0rq53xd8v1wqcbhj8g2lqir2z0nk16pcli6x4bj5xzlbsimy86ri"))))
     (build-system gnu-build-system)
-    (arguments
-     `(#:phases
-       (modify-phases %standard-phases
-         (add-after 'unpack 'bootstrap
-           (lambda _
-             (zero? (system* "autoreconf" "-vif")))))))
     (inputs
      `(("file" ,file)
        ("perl" ,perl)
