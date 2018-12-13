@@ -494,7 +494,7 @@ projects.")
                           (string-append (assoc-ref inputs "python-numpy")
                                          "/" path "/numpy/core/include/:"
                                          (or (getenv "CPATH") "")))
-                  (zero? (system* "make")))))))))
+                  (invoke "make"))))))))
       (propagated-inputs
        `(("hdf5" ,hdf5) ; FIXME: probably should be propagated by h5py
          ("python-biopython" ,python2-biopython)
