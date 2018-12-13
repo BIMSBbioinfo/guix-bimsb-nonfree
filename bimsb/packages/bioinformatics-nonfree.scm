@@ -674,15 +674,15 @@ including SNPS, microsatellites, RFLPs and AFLPs.")
 (define-public viennarna
   (package
     (name "viennarna")
-    (version "2.2.8")
+    (version "2.2.10")
     (source (origin
               (method url-fetch)
-              (uri (string-append
-                    "http://www.tbi.univie.ac.at/RNA/packages/source/ViennaRNA-"
-                    version ".tar.gz"))
+              (uri (string-append "http://www.tbi.univie.ac.at/RNA/"
+                                  "download/sourcecode/2_2_x/ViennaRNA-"
+                                  version ".tar.gz"))
               (sha256
                (base32
-                "0b9h3rrndxjvj3r2wyixf095fghpspgiwx3acbd8hlv3lj6hpi1h"))))
+                "0mycxjqci462d1zmcdhhc47360np1xcrdf2f3yrhhzbn5blwiwwl"))))
     (build-system gnu-build-system)
     (arguments
      ;; Disable link-time optimization because this creates problems
@@ -720,6 +720,18 @@ distance (dissimilarities) using either string alignment or
 tree-editing (Shapiro & Zhang 1990).  Finally, an algorithm to design
 sequences with a predefined structure (inverse folding) is provided.")
     (license (nonfree:non-free "TODO" "license forbids commercial usage"))))
+
+(define-public viennarna-2.2.8
+  (package (inherit viennarna)
+    (version "2.2.8")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append
+                    "http://www.tbi.univie.ac.at/RNA/packages/source/ViennaRNA-"
+                    version ".tar.gz"))
+              (sha256
+               (base32
+                "0b9h3rrndxjvj3r2wyixf095fghpspgiwx3acbd8hlv3lj6hpi1h"))))))
 
 (define-public viennarna-1.8
   (package (inherit viennarna)
@@ -764,7 +776,7 @@ sequences with a predefined structure (inverse folding) is provided.")
     (inputs
      `(("file" ,file)
        ("perl" ,perl)
-       ("viennarna" ,viennarna)))
+       ("viennarna" ,viennarna-2.2.8)))
     (native-inputs
      `(("autoconf" ,autoconf)
        ("automake" ,automake)
@@ -1093,18 +1105,6 @@ sequences greater than 1000 nt in length.")
 MXSCARNA and ProbConsRNA.")
     ;; FIXME: this is probably inaccurate.
     (license (package-license viennarna))))
-
-(define-public viennarna-2.2.10
-  (package (inherit viennarna)
-    (version "2.2.10")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "http://www.tbi.univie.ac.at/RNA/download/sourcecode/2_2_x/ViennaRNA-"
-                    version ".tar.gz"))
-              (sha256
-               (base32
-                "0mycxjqci462d1zmcdhhc47360np1xcrdf2f3yrhhzbn5blwiwwl"))))))
 
 (define-public r-rbowtie
   (package
@@ -1975,7 +1975,7 @@ MACE is a bioinformatics tool dedicated to analyze ChIP-exo data.")
        ("perl-pdf-api2" ,perl-pdf-api2)
        ("perl" ,perl)
        ("randfold" ,randfold)
-       ("viennarna" ,viennarna-2.2.10)))
+       ("viennarna" ,viennarna)))
     (synopsis "Discovering known and novel miRNAs from small RNA sequencing data")
     (description "miRDeep2 discovers active known or novel miRNAs from deep
 sequencing data (Solexa/Illumina, 454, ...).")
