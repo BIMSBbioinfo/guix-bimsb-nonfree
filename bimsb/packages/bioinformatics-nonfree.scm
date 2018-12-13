@@ -1888,8 +1888,8 @@ MACE is a bioinformatics tool dedicated to analyze ChIP-exo data.")
     (source (origin
               (method git-fetch)
               (uri (git-reference
-                   (url "https://github.com/rajewsky-lab/mirdeep2.git")
-                   (commit (string-append "v" version))))
+                    (url "https://github.com/rajewsky-lab/mirdeep2.git")
+                    (commit (string-append "v" version))))
               (file-name (string-append name "-" version "-checkout"))
               (sha256
                (base32
@@ -1905,26 +1905,26 @@ MACE is a bioinformatics tool dedicated to analyze ChIP-exo data.")
              (let ((out (assoc-ref outputs "out")))
                ;; patch scripts checking for ../install_successful file
                (for-each
-                 (lambda (script)
-                   (substitute* script
-                     (("\\$bn/\\.\\./install_successful")
-                      (string-append out
-                                     "/share/mirdeep2/install_successful"))))
-                 '("src/mapper.pl"
-                   "src/miRDeep2.pl"
-                   "src/quantifier.pl"))
+                (lambda (script)
+                  (substitute* script
+                    (("\\$bn/\\.\\./install_successful")
+                     (string-append out
+                                    "/share/mirdeep2/install_successful"))))
+                '("src/mapper.pl"
+                  "src/miRDeep2.pl"
+                  "src/quantifier.pl"))
                ;; patch script using ../Rfam_for_miRDeep.fa file
                (substitute* "src/miRDeep2.pl"
                  (("\\$\\{scripts\\}/\\.\\./Rfam_for_miRDeep\\.fa")
                   (string-append out "/share/mirdeep2/Rfam_for_miRDeep.fa"))
                  (("\\$scripts/\\.\\./Rfam_for_miRDeep\\.fa")
                   (string-append out "/share/mirdeep2/Rfam_for_miRDeep.fa"))))
-               ;; patch script using $(dirname `which miRDeep2.pl`)/indexes dir
-               (substitute* "src/make_html.pl"
-                 (("`which miRDeep2\\.pl`")
-                  "`realpath ~/.local/share/mirdeep2` . \"/\"")
-                 (("mkdir \"\\$\\{scripts\\}indexes")
-                  "mkdir -p \"${scripts}indexes"))
+             ;; patch script using $(dirname `which miRDeep2.pl`)/indexes dir
+             (substitute* "src/make_html.pl"
+               (("`which miRDeep2\\.pl`")
+                "`realpath ~/.local/share/mirdeep2` . \"/\"")
+               (("mkdir \"\\$\\{scripts\\}indexes")
+                "mkdir -p \"${scripts}indexes"))
              #t))
          (replace 'install
            (lambda* (#:key inputs outputs #:allow-other-keys)
@@ -1934,39 +1934,39 @@ MACE is a bioinformatics tool dedicated to analyze ChIP-exo data.")
                ;; place Rfam_for_miRDeep.fa in /share/mirdeep2
                (mkdir-p (string-append out "/share/mirdeep2"))
                (copy-file
-                 "Rfam_for_miRDeep.fa"
-                 (string-append out "/share/mirdeep2/Rfam_for_miRDeep.fa"))
+                "Rfam_for_miRDeep.fa"
+                (string-append out "/share/mirdeep2/Rfam_for_miRDeep.fa"))
                ;; create install_successful file in share/mirdeep2
                (with-output-to-file
-                 (string-append out "/share/mirdeep2/install_successful")
-                 (const #t)))  ;; simply touch the file
+                   (string-append out "/share/mirdeep2/install_successful")
+                 (const #t))) ;; simply touch the file
              #t))
          (add-after 'install 'wrap-perl-scripts
-          (lambda* (#:key inputs outputs #:allow-other-keys)
-            (let ((out (assoc-ref outputs "out")))
-              ;; Make sure perl scripts find all perl inputs at runtime.
-              (for-each (lambda (prog)
-                          (wrap-program (string-append out "/bin/" prog)
-                            `("PERL5LIB" ":" prefix
-                              (,(getenv "PERL5LIB")))))
-                        '("make_html2.pl"
-                          "make_html.pl"
-                          "miRDeep2.pl"))
-              ;; Make sure perl scripts find all input binaries at runtime.
-              (for-each (lambda (prog)
-                          (wrap-program (string-append out "/bin/" prog)
-                            `("PATH" ":" prefix
+           (lambda* (#:key inputs outputs #:allow-other-keys)
+             (let ((out (assoc-ref outputs "out")))
+               ;; Make sure perl scripts find all perl inputs at runtime.
+               (for-each (lambda (prog)
+                           (wrap-program (string-append out "/bin/" prog)
+                             `("PERL5LIB" ":" prefix
+                               (,(getenv "PERL5LIB")))))
+                         '("make_html2.pl"
+                           "make_html.pl"
+                           "miRDeep2.pl"))
+               ;; Make sure perl scripts find all input binaries at runtime.
+               (for-each (lambda (prog)
+                           (wrap-program (string-append out "/bin/" prog)
+                             `("PATH" ":" prefix
                                (,(getenv "PATH")))))
-                        '("make_html2.pl"
-                          "make_html.pl"
-                          "mapper.pl"
-                          "miRDeep2_core_algorithm.pl"
-                          "miRDeep2.pl"
-                          "prepare_signature.pl"
-                          "quantifier.pl"))
-              #t))))))
+                         '("make_html2.pl"
+                           "make_html.pl"
+                           "mapper.pl"
+                           "miRDeep2_core_algorithm.pl"
+                           "miRDeep2.pl"
+                           "prepare_signature.pl"
+                           "quantifier.pl"))
+               #t))))))
     (inputs
-      `(("bowtie1" ,bowtie1)
+     `(("bowtie1" ,bowtie1)
        ("perl-pdf-api2" ,perl-pdf-api2)
        ("perl" ,perl)
        ("randfold" ,randfold)
