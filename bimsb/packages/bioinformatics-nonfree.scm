@@ -986,7 +986,7 @@ and all possible secondary structures.")
            (replace 'build
              (lambda _
                (with-directory-excursion "lib/fstframework/cExtensions"
-                 (zero? (system* "make")))))
+                 (invoke "make"))))
            (replace 'install
              (lambda* (#:key outputs #:allow-other-keys)
                (let* ((out     (assoc-ref outputs "out"))
