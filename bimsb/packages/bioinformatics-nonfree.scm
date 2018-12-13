@@ -89,11 +89,11 @@
        #:phases
        (modify-phases %standard-phases
          (replace 'unpack
-          (lambda* (#:key source #:allow-other-keys)
-            (and (zero? (system* "unzip" source))
-                 (zero? (system* "tar" "-xvf"
-                                 (string-append "bcl2fastq2-v"
-                                                ,version ".tar.gz"))))))
+           (lambda* (#:key source #:allow-other-keys)
+             (invoke "unzip" source)
+             (invoke "tar" "-xvf"
+                     (string-append "bcl2fastq2-v"
+                                    ,version ".tar.gz"))))
          (add-after 'unpack 'enter-dir (lambda _ (chdir "bcl2fastq/src") #t))
          (add-after 'enter-dir 'patch-stuff
                     (lambda _
