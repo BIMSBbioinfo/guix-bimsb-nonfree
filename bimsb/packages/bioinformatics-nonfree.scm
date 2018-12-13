@@ -303,14 +303,15 @@ genome (2.9 GB for paired-end).")
     (arguments
      `(#:tests? #f ; no "test" target
        #:python ,python-2
-       #:phases (alist-replace
-                 'unpack
-                 ;; The release tarball contains loose files.
-                 (lambda* (#:key source #:allow-other-keys)
-                   (and (mkdir "dinup")
-                        (zero? (system* "tar" "-C" "dinup" "-xvf" source))
-                        (chdir "dinup")))
-                 %standard-phases)))
+       #:phases
+       (modify-phases %standard-phases
+         (replace 'unpack
+           ;; The release tarball contains loose files.
+           (lambda* (#:key source #:allow-other-keys)
+             (mkdir "dinup")
+             (invoke "tar" "-C" "dinup" "-xvf" source)
+             (chdir "dinup")
+             #t)))))
     (native-inputs
      `(("python-setuptools" ,python2-setuptools)))
     (home-page "http://zhanglab.tongji.edu.cn/softwares/DiNuP/")
