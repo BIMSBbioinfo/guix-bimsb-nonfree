@@ -543,7 +543,7 @@ data.")
                (("tomtom.test") ""))))
          (add-before 'configure 'check-perl-dependencies
            (lambda _
-             (zero? (system* "perl" "./scripts/dependencies.pl"))))
+             (invoke "perl" "./scripts/dependencies.pl")))
          (add-after 'install 'wrap-perl-scripts
            (lambda* (#:key inputs outputs #:allow-other-keys)
              ;; Make sure perl scripts finds all perl inputs at runtime.
