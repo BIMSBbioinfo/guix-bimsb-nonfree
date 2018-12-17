@@ -1896,7 +1896,7 @@ MACE is a bioinformatics tool dedicated to analyze ChIP-exo data.")
               (uri (git-reference
                     (url "https://github.com/rajewsky-lab/mirdeep2.git")
                     (commit (string-append "v" version))))
-              (file-name (string-append name "-" version "-checkout"))
+              (file-name (git-file-name name version))
               (sha256
                (base32
                 "0srxxymxmpfb656g6r26zhplx9fl6wxrzzdl6wr7r06nnmx6sjd2"))))
