@@ -1,7 +1,7 @@
 ;;; GNU Guix --- Functional package management for GNU
 ;;; Copyright © 2015, 2016, 2017, 2018 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
 ;;; Copyright © 2017 CM Massimo <carlomaria.massimo@mdc-berlin.de>
-;;; Copyright © 2018 Marcel Schilling <marcel.schilling@mdc-berlin.de>
+;;; Copyright © 2018, 2019 Marcel Schilling <marcel.schilling@mdc-berlin.de>
 ;;;
 ;;; This file is NOT part of GNU Guix, but is supposed to be used with GNU
 ;;; Guix and thus has the same license.
@@ -1891,7 +1891,7 @@ MACE is a bioinformatics tool dedicated to analyze ChIP-exo data.")
 (define-public mirdeep2
   (package
     (name "mirdeep2")
-    (version "0.1.0")
+    (version "0.1.1")
     (source (origin
               (method git-fetch)
               (uri (git-reference
@@ -1900,7 +1900,7 @@ MACE is a bioinformatics tool dedicated to analyze ChIP-exo data.")
               (file-name (git-file-name name version))
               (sha256
                (base32
-                "0srxxymxmpfb656g6r26zhplx9fl6wxrzzdl6wr7r06nnmx6sjd2"))))
+                "0w22kfxrfh6n617bmraim0larj7vzw5qs0j5plg71icrj1hkv0a1"))))
     (build-system gnu-build-system)
     (arguments
      `(#:tests? #f ;; no check target
