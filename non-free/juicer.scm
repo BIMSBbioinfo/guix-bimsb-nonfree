@@ -23,8 +23,14 @@
   #:use-module (guix git-download)
   #:use-module (guix utils)
   #:use-module (guix build-system ant)
+  #:use-module (guix build-system gnu)
   #:use-module (gnu packages)
-  #:use-module (gnu packages java))
+  #:use-module (gnu packages base)
+  #:use-module (gnu packages bash)
+  #:use-module (gnu packages bioinformatics)
+  #:use-module (gnu packages gawk)
+  #:use-module (gnu packages java)
+  #:use-module (gnu packages perl))
 
 ;; This depends on jCUDA, which depends on the non-free CUDA
 ;; libraries.
@@ -59,3 +65,88 @@
 Juicebox can now be used to visualize and interactively (re)assemble
 genomes.")
     (license license:expat)))
+
+(define-public juicer
+  (let ((commit "43cc35ff546d33839b89ca3949c2e1f848077eb1")
+        (revision "1"))
+    (package
+      (name "juicer")
+      (version (git-version "1.6.2" revision commit))
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/aidenlab/juicer.git")
+                      (commit commit)))
+                (file-name (git-file-name name version))
+                (sha256
+                 (base32
+                  "0gcq9klgwwyq4y0pr0w6a2vfsf8v5a16zqpgqfks5yh6dyrj2ha9"))))
+      (build-system gnu-build-system)
+      (arguments
+       `(#:tests? #f ; there are none!
+         #:phases
+         (modify-phases %standard-phases
+           (replace 'configure
+             (lambda* (#:key inputs outputs #:allow-other-keys)
+               (substitute* "UGER/scripts/juicer.sh"
+                 (("^export TMPDIR.*") "") ; why would you even do that?
+                 (("java -")
+                  (string-append (which "java") " -"))
+                 (("#!/bin/bash")
+                  (string-append "#!" (which "bash")))
+                 ;; This assumes the use of environment modules.
+                 ;; Disable this.
+                 (("^usePath=/broad/software/scripts/useuse")
+                  "usePath=echo")
+                 (("source \\$usePath") "")
+                 (("\\$load_cluster") "")
+                 (("^load_bwa=.*") "load_bwa=echo\n")
+                 (("^load_java=.*") "load_java=echo\n")
+                 (("^load_cluster=.*") "load_cluster=echo\n")
+                 (("^load_coreutils=.*") "load_coreutils=echo\n")
+                 (("^juiceDir=\"/broad/aidenlab\"") "juiceDir=\"/tmp\"")
+                 (("\\$\\{juiceDir\\}/scripts")
+                  (string-append (assoc-ref outputs "out")
+                                 "/share/juicer/UGER/scripts")))
+               (substitute* "UGER/scripts/juicer_tools"
+                 ;; Use this particular variant of Java.
+                 (("^java ")
+                  (string-append (which "java") " "))
+                 ;; Don't try to find juicer_tools in the same
+                 ;; directory as the script.
+                 (("`dirname \\$0`/juicer_tools.jar")
+                  (string-append (assoc-ref inputs "java-juicebox")
+                                 "/share/java/juicer_tools.jar")))))
+           (delete 'build)
+           (replace 'install
+             (lambda* (#:key outputs #:allow-other-keys)
+               (let* ((out (assoc-ref outputs "out"))
+                      (bin (string-append out "/bin"))
+                      (share (string-append out "/share/juicer")))
+                 (copy-recursively "." share)
+                 (mkdir-p bin)
+                 ;; Simple script to launch the selected pipeline
+                 ;; script.  Default to UGER (grid engine) scripts.
+                 (with-output-to-file (string-append bin "/juicer")
+                   (lambda ()
+                     (format #t "#!~a~%dir=\"$1\"; test -z \"$dir\" && dir=UGER; shift;~%~a \"~a/$dir/scripts/juicer.sh\" $@~%"
+                             (which "bash")
+                             (which "bash")
+                             share)))
+                 (chmod (string-append bin "/juicer") #o555)
+                 #t))))))
+      (inputs
+       `(("bash" ,bash)
+         ("java-juicebox" ,java-juicebox)
+         ("java" ,icedtea)
+         ("perl" ,perl)))
+      (propagated-inputs
+       `(("bwa" ,bwa)
+         ("coreutils" ,coreutils)
+         ("gawk" ,gawk)))
+      (home-page "https://github.com/aidenlab/Juicebox")
+      (synopsis "Visualization and analysis software for Hi-C data")
+      (description "Juicebox is visualization software for Hi-C data.
+Juicebox can now be used to visualize and interactively (re)assemble
+genomes.")
+      (license license:expat))))
