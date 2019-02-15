@@ -128,7 +128,7 @@
                                          (package-version libxslt))))
                       #t)))))
     (inputs
-     `(("boost" ,boost)
+     `(("boost" ,boost-1.58)
        ("libxml2" ,libxml2)
        ("libxslt" ,libxslt)
        ("zlib" ,zlib)))
