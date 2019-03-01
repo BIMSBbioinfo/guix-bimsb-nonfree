@@ -1891,7 +1891,7 @@ MACE is a bioinformatics tool dedicated to analyze ChIP-exo data.")
 (define-public mirdeep2
   (package
     (name "mirdeep2")
-    (version "0.1.1")
+    (version "0.1.2")
     (source (origin
               (method git-fetch)
               (uri (git-reference
@@ -1900,7 +1900,7 @@ MACE is a bioinformatics tool dedicated to analyze ChIP-exo data.")
               (file-name (git-file-name name version))
               (sha256
                (base32
-                "0w22kfxrfh6n617bmraim0larj7vzw5qs0j5plg71icrj1hkv0a1"))))
+                "1driz4bd1v53p7wmmn3c8v7dg52xd8gw7sd5g6c1kclr4baxmmwc"))))
     (build-system gnu-build-system)
     (arguments
      `(#:tests? #f ;; no check target
