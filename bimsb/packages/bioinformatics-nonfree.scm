@@ -1,5 +1,5 @@
 ;;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2015, 2016, 2017, 2018 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
+;;; Copyright © 2015, 2016, 2017, 2018, 2019 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
 ;;; Copyright © 2017 CM Massimo <carlomaria.massimo@mdc-berlin.de>
 ;;; Copyright © 2018, 2019 Marcel Schilling <marcel.schilling@mdc-berlin.de>
 ;;;
@@ -253,14 +253,14 @@ to write a free software alternative rather than using this tool."))))
   (package
     (inherit bowtie)
     (name "bowtie1")
-    (version "1.1.2")
+    (version "1.2.2")
     (source (origin
               (method url-fetch)
               (uri (string-append "mirror://sourceforge/bowtie-bio/bowtie/"
                                   version "/bowtie-" version "-src.zip"))
               (sha256
                (base32
-                "1bipnvm94nlzbawix09bkfdvig41qr235qyrjccgszi04p4crsdi"))
+                "1jl2cj9bz8lwz8dwnxbycn8yp8g4kky62fkcxifyf1ri0y6n2vc0"))
               (modules '((guix build utils)))
               (snippet
                '(substitute* "Makefile"
@@ -285,8 +285,7 @@ DNA sequences (reads) to the human genome at a rate of over 25 million 35-bp
 reads per hour.  Bowtie indexes the genome with a Burrows-Wheeler index to
 keep its memory footprint small: typically about 2.2 GB for the human
 genome (2.9 GB for paired-end).")
-    (supported-systems '("x86_64-linux"))
-    (license nonfree:artistic1.0)))
+    (license license:artistic2.0)))
 
 (define-public dinup
   (package
