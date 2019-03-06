@@ -23,9 +23,11 @@
   #:use-module (guix download)
   #:use-module (guix git-download)
   #:use-module (guix build-system gnu)
+  #:use-module (guix build-system r)
   #:use-module (gnu packages)
   #:use-module (gnu packages autotools)
   #:use-module (gnu packages base)
+  #:use-module (gnu packages bioconductor)
   #:use-module (gnu packages bioinformatics)
   #:use-module (gnu packages compression)
   #:use-module (gnu packages cran)
@@ -241,3 +243,49 @@ LocARNA performs Sankoff-like alignment and is in particular suited
 for analyzing sets of related RNAs without known common structure.")
     (home-page "http://www.bioinf.uni-freiburg.de/Software/LocARNA/")
     (license license:gpl3)))
+
+;; Although this is free software, it depends on rbowtie, which is
+;; nonfree.
+(define-public r-quasr
+  (package
+    (name "r-quasr")
+    (version "1.14.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (bioconductor-uri "QuasR" version))
+       (sha256
+        (base32
+         "1330vlvsfypr0pl7arawks4d80yjk2afn637ivcnbhrchkmicfdv"))))
+    (properties `((upstream-name . "QuasR")))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-biobase" ,r-biobase)
+       ("r-biocgenerics" ,r-biocgenerics)
+       ("r-biocinstaller" ,r-biocinstaller)
+       ("r-biocparallel" ,r-biocparallel)
+       ("r-biostrings" ,r-biostrings)
+       ("r-bsgenome" ,r-bsgenome)
+       ("r-genomeinfodb" ,r-genomeinfodb)
+       ("r-genomicalignments" ,r-genomicalignments)
+       ("r-genomicfeatures" ,r-genomicfeatures)
+       ("r-genomicfiles" ,r-genomicfiles)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-iranges" ,r-iranges)
+       ("r-rbowtie" ,r-rbowtie) ; non-free
+       ("r-rsamtools" ,r-rsamtools)
+       ("r-rtracklayer" ,r-rtracklayer)
+       ("r-s4vectors" ,r-s4vectors)
+       ("r-shortread" ,r-shortread)
+       ("r-zlibbioc" ,r-zlibbioc)))
+    (inputs
+     `(("zlib" ,zlib)))
+    (home-page "http://bioconductor.org/packages/QuasR")
+    (synopsis "Quantify and annotate short reads in R")
+    (description
+     "This package provides a framework for the quantification and
+analysis of short genomic reads.  It covers a complete workflow
+starting from raw sequence reads, over creation of alignments and
+quality control plots, to the quantification of genomic regions of
+interest.")
+    (license license:gpl2)))
