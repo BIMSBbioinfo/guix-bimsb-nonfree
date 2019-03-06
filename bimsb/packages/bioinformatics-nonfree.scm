@@ -715,41 +715,6 @@ sequences with a predefined structure (inverse folding) is provided.")
     (inputs '())
     (native-inputs '())))
 
-;; Although this program is released under the GPL it depends on
-;; ViennaRNA, which is non-free software.
-(define-public locarna
-  (package
-    (name "locarna")
-    (version "1.8.10")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append "http://www.bioinf.uni-freiburg.de/"
-                                  "Software/LocARNA/Releases/locarna-"
-                                  version ".tar.gz"))
-              (sha256
-               (base32
-                "0rq53xd8v1wqcbhj8g2lqir2z0nk16pcli6x4bj5xzlbsimy86ri"))))
-    (build-system gnu-build-system)
-    (inputs
-     `(("file" ,file)
-       ("perl" ,perl)
-       ("viennarna" ,viennarna)))
-    (native-inputs
-     `(("autoconf" ,autoconf)
-       ("automake" ,automake)
-       ("libtool" ,libtool)
-       ("doxygen" ,doxygen)
-       ("pkg-config" ,pkg-config)))
-    (synopsis "RNA alignment tools")
-    (description
-     "LocARNA is a collection of alignment tools for the structural
-analysis of RNA.  Given a set of RNA sequences, LocARNA simultaneously
-aligns and predicts common structures for your RNAs.  In this way,
-LocARNA performs Sankoff-like alignment and is in particular suited
-for analyzing sets of related RNAs without known common structure.")
-    (home-page "http://www.bioinf.uni-freiburg.de/Software/LocARNA/")
-    (license license:gpl3)))
-
 (define-public nofold
   (let ((revision "1")
         (commit "a3da753118db8310d453669aa01d34a270532a4b"))
