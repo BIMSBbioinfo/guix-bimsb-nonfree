@@ -249,20 +249,20 @@ for analyzing sets of related RNAs without known common structure.")
 (define-public r-quasr
   (package
     (name "r-quasr")
-    (version "1.14.0")
+    (version "1.22.1")
     (source
      (origin
        (method url-fetch)
        (uri (bioconductor-uri "QuasR" version))
        (sha256
         (base32
-         "1330vlvsfypr0pl7arawks4d80yjk2afn637ivcnbhrchkmicfdv"))))
+         "15lnrj8m8p1ns7iv5f2j0xshma3gpjp3lwry1s0axsxsk9khzrl0"))))
     (properties `((upstream-name . "QuasR")))
     (build-system r-build-system)
     (propagated-inputs
      `(("r-biobase" ,r-biobase)
        ("r-biocgenerics" ,r-biocgenerics)
-       ("r-biocinstaller" ,r-biocinstaller)
+       ("r-biocmanager" ,r-biocmanager)
        ("r-biocparallel" ,r-biocparallel)
        ("r-biostrings" ,r-biostrings)
        ("r-bsgenome" ,r-bsgenome)
