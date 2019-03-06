@@ -1037,14 +1037,14 @@ MXSCARNA and ProbConsRNA.")
 (define-public r-rbowtie
   (package
     (name "r-rbowtie")
-    (version "1.14.0")
+    (version "1.22.0")
     (source
      (origin
        (method url-fetch)
        (uri (bioconductor-uri "Rbowtie" version))
        (sha256
         (base32
-         "11sl03ljkq7hkm6ilw91bh4p2lz6iw35xn0f5fyh37i0j5nrmikh"))))
+         "00vpszsjkvid25sjrpzw1dylwmgv27z67njvg8h1axnb09a7gnjw"))))
     (properties `((upstream-name . "Rbowtie")))
     (build-system r-build-system)
     (home-page "http://bioconductor.org/packages/Rbowtie")
