@@ -733,7 +733,7 @@ sequences with a predefined structure (inverse folding) is provided.")
     (inputs
      `(("file" ,file)
        ("perl" ,perl)
-       ("viennarna" ,viennarna-2.2.8)))
+       ("viennarna" ,viennarna)))
     (native-inputs
      `(("autoconf" ,autoconf)
        ("automake" ,automake)
