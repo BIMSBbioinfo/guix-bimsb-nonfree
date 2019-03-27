@@ -21,7 +21,7 @@
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module ((guix licenses-nonfree) #:prefix nonfree:)
   #:use-module (guix packages)
-  #:use-module (guix download)
+  #:use-module (guix git-download)
   #:use-module (guix utils)
   #:use-module (guix build-system gnu)
   #:use-module (gnu packages)
@@ -35,22 +35,15 @@
   (package
     (name "kentutils-nonfree")
     (version "0")
-    ;; TODO: fetch via git instead.
-    ;; (source (origin
-    ;;           (method git-fetch)
-    ;;           (uri (git-reference
-    ;;                 (url "git://genome-source.soe.ucsc.edu/kent.git")
-    ;;                 (commit "v379_base")))
-    ;;           (file-name (git-file-name name version))
-    ;;           (sha256
-    ;;            (base32
-    ;;             "0rsbrg4jii7jzf1hj4yyaa5y9yh4srvpcxrxf1mb87fxhrd29my2"))))
     (source (origin
-              (method url-fetch)
-              (uri "http://hgdownload.soe.ucsc.edu/admin/exe/userApps.src.tgz")
+              (method git-fetch)
+              (uri (git-reference
+                    (url "git://genome-source.soe.ucsc.edu/kent.git")
+                    (commit "v379_base")))
+              (file-name (git-file-name name version))
               (sha256
                (base32
-                "09ca9y24x47rlfk9d1lr1rpiqfi3akx6dqns8i5lq2v9yja5j6i2"))))
+                "0rsbrg4jii7jzf1hj4yyaa5y9yh4srvpcxrxf1mb87fxhrd29my2"))))
     (build-system gnu-build-system)
     (arguments
      `(#:make-flags
@@ -63,7 +56,17 @@
        #:tests? #f ; none included
        #:phases
        (modify-phases %standard-phases
-         (delete 'configure)
+         ;; The sources are expected to be found inside the "kent"
+         ;; subdirectory.
+         (replace 'configure
+           (lambda _
+             (rename-file "src/userApps" "buildroot/")
+             (mkdir "buildroot/kent")
+             (rename-file "src" "buildroot/kent/src")
+             (for-each make-file-writable
+                       (find-files "buildroot" ".*"))
+             (chdir "buildroot")
+             #t))
          ;; By setting DESTDIR the binaries are built directly in the
          ;; target directory.  There is no separate installation step.
          (delete 'install))))
