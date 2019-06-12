@@ -932,29 +932,6 @@ MXSCARNA and ProbConsRNA.")
     ;; FIXME: this is probably inaccurate.
     (license (package-license viennarna))))
 
-(define-public r-rbowtie
-  (package
-    (name "r-rbowtie")
-    (version "1.22.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "Rbowtie" version))
-       (sha256
-        (base32
-         "00vpszsjkvid25sjrpzw1dylwmgv27z67njvg8h1axnb09a7gnjw"))))
-    (properties `((upstream-name . "Rbowtie")))
-    (build-system r-build-system)
-    (home-page "http://bioconductor.org/packages/Rbowtie")
-    (synopsis "R bowtie wrapper")
-    (description
-     "This package provides an R wrapper around the popular bowtie
-short read aligner and around SpliceMap, a de novo splice junction
-discovery and alignment tool.  The package is used by the QuasR
-bioconductor package.  It is recommended to use the QuasR package
-instead of using Rbowtie directly.")
-    (license nonfree:artistic1.0)))
-
 (define-public defuse-tools
   (package
     (name "defuse-tools")
