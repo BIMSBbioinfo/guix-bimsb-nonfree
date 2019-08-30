@@ -114,6 +114,49 @@ of postmortem tissues, in which RNA degradation during tissue collection is
 particularly an issue.")
     (license license:gpl3)))
 
+;; Although this is free software, it depends on rankprod, which is
+;; nonfree.
+(define-public r-translatome
+  (package
+    (name "r-translatome")
+    (version "1.22.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (bioconductor-uri "tRanslatome" version))
+       (sha256
+        (base32
+         "169nizkxgs9dyhyria6354jvxr9hmqq2y00kgril4sa0kkhwma4y"))))
+    (properties `((upstream-name . "tRanslatome")))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-anota" ,r-anota)
+       ("r-biobase" ,r-biobase)
+       ("r-deseq" ,r-deseq)
+       ("r-edger" ,r-edger)
+       ("r-gosemsim" ,r-gosemsim)
+       ("r-gplots" ,r-gplots)
+       ("r-heatplus" ,r-heatplus)
+       ("r-limma" ,r-limma)
+       ("r-org-hs-eg-db" ,r-org-hs-eg-db)
+       ("r-plotrix" ,r-plotrix)
+       ("r-rankprod" ,r-rankprod)       ; non-free
+       ("r-sigpathway" ,r-sigpathway)
+       ("r-topgo" ,r-topgo)))
+    (home-page "https://bioconductor.org/packages/tRanslatome/")
+    (synopsis "Comparison between multiple levels of gene expression")
+    (description
+     "This package is used for the detection of @dfn{differentially
+expressed genes} (DEGs) from the comparison of two biological
+conditions (treated vs. untreated, diseased vs. normal, mutant
+vs. wild-type) among different levels of gene
+expression (transcriptome ,translatome, proteome), using several
+statistical methods: Rank Product, Translational Efficiency, t-test,
+Limma, ANOTA, DESeq, edgeR.  It also provides the possibility to plot
+the results with scatterplots, histograms, MA plots, standard
+deviation (SD) plots, coefficient of variation (CV) plots.")
+    (license license:gpl3)))
+
 ;; Although this program is released under the GPL it depends on
 ;; ViennaRNA, which is non-free software.
 (define-public mirdeep2
