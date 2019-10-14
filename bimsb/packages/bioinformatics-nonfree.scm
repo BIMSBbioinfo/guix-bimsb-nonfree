@@ -1401,28 +1401,6 @@ Sequence Analysis Tools (RSAT).")
 users, with some restrictions on utilization (non-commercial,
 non-military and non-redistribution)."))))
 
-(define-public r-minet
-  (package
-    (name "r-minet")
-    (version "3.38.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "minet" version))
-       (sha256
-        (base32
-         "14vyl2f27ydffz7y7yqg5rja5rv2zrzadfm23wp2633qisw56rpr"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-infotheo" ,r-infotheo)))
-    (home-page "http://minet.meyerp.com")
-    (synopsis "Mutual information networks")
-    (description
-     "This package implements various algorithms for inferring mutual
-information networks (such as gene networks) from data (using mutual
-information). In particular, the package implements MRNET.")
-    (license (nonfree:non-free "CC-BY-NC-SA"))))
-
 (define-public python2-mace
   (package
     (name "python2-mace")
