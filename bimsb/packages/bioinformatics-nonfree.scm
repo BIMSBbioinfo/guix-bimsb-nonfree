@@ -64,7 +64,8 @@
   #:use-module (gnu packages web)
   #:use-module (gnu packages xml)
   #:use-module (bimsb packages staging)
-  #:use-module (bimsb packages variants))
+  #:use-module (bimsb packages variants)
+  #:use-module (bimsb packages tainted))
 
 (define-public bcl2fastq
   (package
