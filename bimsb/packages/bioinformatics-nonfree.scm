@@ -1447,32 +1447,6 @@ MACE is a bioinformatics tool dedicated to analyze ChIP-exo data.")
     ;; others say "Artistic license".
     (license license:gpl2+)))
 
-(define-public r-rankprod
-  (package
-    (name "r-rankprod")
-    (version "3.10.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "RankProd" version))
-       (sha256
-        (base32
-         "0530izdfqishc6jjnj0ac5pcvsdh1z646imwy8b1s95vgnq5qg8q"))))
-    (properties `((upstream-name . "RankProd")))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-gmp" ,r-gmp)
-       ("r-rmpfr" ,r-rmpfr)))
-    (home-page "https://bioconductor.org/packages/RankProd/")
-    (synopsis "Identify differentially expressed genes")
-    (description
-     "This package implements a non-parametric method for identifying
-differentially expressed (up- or down- regulated) genes based on the estimated
-percentage of false predictions (pfp).  The method can combine data sets from
-different origins (meta-analysis) to increase the power of the
-identification.")
-    (license (nonfree:non-free "Non-commercial"))))
-
 (define-public r-loomr
   (let ((commit "df0144bd2bbceca6fadef9edc1bbc5ca672d4739")
         (revision "1"))
