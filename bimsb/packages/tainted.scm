@@ -1,5 +1,6 @@
 ;;; GNU Guix --- Functional package management for GNU
 ;;; Copyright © 2019 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
+;;; Copyright © 2019 Marcel Schilling <marcel.schilling@mdc-berlin.de>
 ;;;
 ;;; This file is NOT part of GNU Guix, but is supposed to be used with GNU
 ;;; Guix and thus has the same license.
@@ -40,7 +41,8 @@
   #:use-module (gnu packages statistics)
   #:use-module (bimsb packages staging)
   #:use-module (bimsb packages variants)
-  #:use-module (bimsb packages bioinformatics-nonfree))
+  #:use-module (bimsb packages bioinformatics-nonfree)
+  #:use-module (bioconductor nonfree))
 
 ;; Tainted because of the dependency on the non-free Math::CDF.
 (define-public mrin
