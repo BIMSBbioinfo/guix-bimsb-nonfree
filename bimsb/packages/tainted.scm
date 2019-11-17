@@ -164,7 +164,7 @@ deviation (SD) plots, coefficient of variation (CV) plots.")
 (define-public mirdeep2
   (package
     (name "mirdeep2")
-    (version "0.1.2")
+    (version "0.1.3")
     (source (origin
               (method git-fetch)
               (uri (git-reference
@@ -173,7 +173,7 @@ deviation (SD) plots, coefficient of variation (CV) plots.")
               (file-name (git-file-name name version))
               (sha256
                (base32
-                "1driz4bd1v53p7wmmn3c8v7dg52xd8gw7sd5g6c1kclr4baxmmwc"))))
+                "1mlihj6c6zkqsvrdqnz5wjz4annjr8yi6slv63bbcl4bdwdywcd6"))))
     (build-system gnu-build-system)
     (arguments
      `(#:tests? #f ;; no check target
