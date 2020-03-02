@@ -1,5 +1,5 @@
 ;;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2015, 2016, 2017, 2018, 2019 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
+;;; Copyright © 2015, 2016, 2017, 2018, 2019, 2020 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
 ;;; Copyright © 2017 CM Massimo <carlomaria.massimo@mdc-berlin.de>
 ;;; Copyright © 2018, 2019 Marcel Schilling <marcel.schilling@mdc-berlin.de>
 ;;;
@@ -1470,3 +1470,45 @@ and modify loom files.  loomR aims to be completely compatible with loompy.")
 and clustering) is an R package to infer Gene Regulatory Networks and
 cell types from single-cell RNA-seq data.")
       (license (nonfree:non-free "Non-commercial")))))
+
+(define-public cermit
+  (package
+    (name "cermit")
+    (version "1.11")
+    (source (origin
+              (method url-fetch)
+              (uri (string-append "file:///gnu/remote/cermit-" version ".tar.gz"))
+              (sha256
+               (base32
+                "1gj2dm3nkmppgpm28rnj2g58nsgy0xrhmm7vvdm3pisl0q0m5c4d"))))
+    (build-system gnu-build-system)
+    (arguments
+     `(#:tests? #f
+       #:make-flags '("cERMIT")
+       #:phases
+       (modify-phases %standard-phases
+         (add-after 'unpack 'chdir
+           (lambda _ (chdir "cERMIT") #t))
+         (add-after 'chdir 'fix-makefile
+           (lambda _
+             (substitute* "makefile"
+               (("-m32") "")
+               (("../libs/libgsl_1.14.a ../libs/libgslcblas_1.14.a")
+                "-lgsl -lgslcblas"))
+             #t))
+         (delete 'configure)
+         (replace 'install
+           (lambda* (#:key outputs #:allow-other-keys)
+             (let ((bin (string-append (assoc-ref outputs "out") "/bin")))
+               (mkdir-p bin)
+               (install-file "bin/cERMIT" bin)
+               #t))))))
+    (inputs
+     `(("gsl" ,gsl)))
+    (supported-systems '("i686-linux"))
+    (home-page "TODO")
+    (synopsis "TODO")
+    (description "TODO")
+    ;; It should be GPLv3+ because it uses GSL and includes other code
+    ;; under the GPLv3+.
+    (license nonfree:undeclared+)))
