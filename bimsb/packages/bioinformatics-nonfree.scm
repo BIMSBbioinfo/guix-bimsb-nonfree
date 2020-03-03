@@ -1511,4 +1511,4 @@ cell types from single-cell RNA-seq data.")
     (description "TODO")
     ;; It should be GPLv3+ because it uses GSL and includes other code
     ;; under the GPLv3+.
-    (license nonfree:undeclared+)))
+    (license nonfree:undeclared)))
