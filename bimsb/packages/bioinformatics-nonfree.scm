@@ -1474,13 +1474,13 @@ cell types from single-cell RNA-seq data.")
 (define-public cermit
   (package
     (name "cermit")
-    (version "1.11")
+    (version "1.11.1")
     (source (origin
               (method url-fetch)
               (uri (string-append "file:///gnu/remote/cermit-" version ".tar.gz"))
               (sha256
                (base32
-                "1gj2dm3nkmppgpm28rnj2g58nsgy0xrhmm7vvdm3pisl0q0m5c4d"))))
+                "18p06n4ziykiznbk4b1fzjyg2cm43nqr82g6q6p14jym6lywgi5d"))))
     (build-system gnu-build-system)
     (arguments
      `(#:tests? #f
@@ -1488,7 +1488,19 @@ cell types from single-cell RNA-seq data.")
        #:phases
        (modify-phases %standard-phases
          (add-after 'unpack 'chdir
-           (lambda _ (chdir "cERMIT") #t))
+           (lambda _ (chdir "source/cERMIT") #t))
+         (add-after 'chdir 'patch-references
+           (lambda* (#:key outputs #:allow-other-keys)
+             (substitute* "motif_finder.c"
+               (("command, \"mv")
+                (string-append "command, \"" (which "mv"))))
+             (substitute* "PSSM.c"
+               (("command, \"R")
+                (string-append "command, \"" (which "R")))
+               (("./generate_logo.R")
+                (string-append (assoc-ref outputs "out")
+                               "/share/cermit/generate_logo.R")))
+             #t))
          (add-after 'chdir 'fix-makefile
            (lambda _
              (substitute* "makefile"
@@ -1499,12 +1511,18 @@ cell types from single-cell RNA-seq data.")
          (delete 'configure)
          (replace 'install
            (lambda* (#:key outputs #:allow-other-keys)
-             (let ((bin (string-append (assoc-ref outputs "out") "/bin")))
+             (let* ((out   (assoc-ref outputs "out"))
+                    (bin   (string-append out "/bin"))
+                    (share (string-append out "/share/cermit")))
                (mkdir-p bin)
                (install-file "bin/cERMIT" bin)
+
+               (mkdir-p share)
+               (install-file "../../generate_logo.R" share)
                #t))))))
     (inputs
-     `(("gsl" ,gsl)))
+     `(("gsl" ,gsl)
+       ("r" ,r-minimal)))
     (supported-systems '("i686-linux"))
     (home-page "TODO")
     (synopsis "TODO")
