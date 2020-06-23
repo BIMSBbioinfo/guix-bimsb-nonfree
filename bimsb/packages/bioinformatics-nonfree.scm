@@ -405,34 +405,29 @@ projects.")
 (define-public python2-mirnylib
   (deprecated-package "python2-mirnylib" python-mirnylib))
 
-;; https://bitbucket.org/mirnylab/hiclib/issues/36/no-license-declaration
-(define-public python2-hiclib
-  (let ((commit "1193891")
-        (revision "2"))
+(define-public python-hiclib
+  (let ((commit "518546e41987dca8a40f45ddc63601a5aaf46bfa")
+        (revision "4"))
     (package
-      (name "python2-hiclib")
-      (version (string-append "0-" revision "." commit))
+      (name "python-hiclib")
+      (version (git-version "0" revision commit))
       (source (origin
-                (method hg-fetch)
-                (uri (hg-reference
-                      (url "https://bitbucket.org/mirnylab/hiclib")
-                      (changeset commit)))
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/mirnylab/hiclib-legacy")
+                      (commit commit)))
                 (sha256
                  (base32
-                  "18y46bic26ya7zna9kakfifgqf6r4q9395nsjwv5hzcclfk755nf"))))
+                  "04zd0hwgb3sw7y9ylp409nnkskpnyij55db2lkvlw7fszc5zdf9k"))))
       (build-system python-build-system)
       (arguments
        `(#:tests? #f ; tests depend on unavailable test data
-         #:python ,python-2 ; python2 only
          #:phases
          (modify-phases %standard-phases
            (add-after 'unpack 'use-distutils
             (lambda _
               ;; HOME needs to be set to unpack the Egg archive
               (setenv "HOME" "/tmp")
-              (substitute* "setup.py"
-                (("from setuptools import setup")
-                 "from distutils.core import setup"))
               #t))
            (add-after 'unpack 'set-matplotlib-backend-to-agg
             (lambda _
@@ -442,43 +437,27 @@ projects.")
                 (("import matplotlib\\.pyplot as plt" line)
                  (string-append "import matplotlib;matplotlib.use('Agg');"
                                 line)))
-              #t))
-           (add-before 'build 'build-binarySearch
-            (lambda* (#:key inputs #:allow-other-keys)
-              (let* ((python-version (string-take (string-take-right
-                                                   (assoc-ref inputs "python") 6) 3))
-                     (path (string-append "lib/python" python-version
-                                          "/site-packages")))
-                (substitute* "setup.py"
-                  (("binarySearch/fastBinSearch.pyx")
-                   "binarySearch/fastBinSearch.cpp")
-                  (("packages=\\['hiclib'\\],")
-                   (string-append "packages=['hiclib'], "
-                                  "data_files=[('" path "/hiclib', "
-                                  "['binarySearch/fastBinSearch.so'])],")))
-                (with-directory-excursion "binarySearch"
-                  (setenv "CPATH"
-                          (string-append (assoc-ref inputs "python-numpy")
-                                         "/" path "/numpy/core/include/:"
-                                         (or (getenv "CPATH") "")))
-                  (invoke "make"))))))))
+              #t)))))
       (propagated-inputs
        `(("hdf5" ,hdf5) ; FIXME: probably should be propagated by h5py
-         ("python-biopython" ,python2-biopython)
-         ("python-numpy" ,python2-numpy)
-         ("python-scipy" ,python2-scipy)
-         ("python-matplotlib" ,python2-matplotlib)
-         ("python-pysam" ,python2-pysam)
-         ("python-mirnylib" ,python2-mirnylib)))
+         ("python-biopython" ,python-biopython)
+         ("python-numpy" ,python-numpy)
+         ("python-scipy" ,python-scipy)
+         ("python-matplotlib" ,python-matplotlib)
+         ("python-pysam" ,python-pysam)
+         ("python-mirnylib" ,python-mirnylib)))
       (native-inputs
-       `(("python-cython" ,python2-cython)
-         ("python-setuptools" ,python2-setuptools)))
+       `(("python-cython" ,python-cython)
+         ("python-setuptools" ,python-setuptools)))
       (home-page "https://bitbucket.org/mirnylab/hiclib")
       (synopsis "Collection of tools to map, filter and analyze Hi-C data")
       (description
        "Hi-C lib is a collection of tools to map, filter and analyze Hi-C
 data.")
-      (license nonfree:undeclared))))
+      (license license:expat))))
+
+(define-public python2-hiclib
+  (deprecated-package "python2-hiclib" python-hiclib))
 
 (define-public meme
   (package
