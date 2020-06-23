@@ -1174,7 +1174,9 @@ or siRNA seed sequences from microarray expression data.  Sylamer is extremely
 fast and can be applied to genome-wide datasets with ease.  Results are
 plotted in terms of a significance landscape plot.  These plots show
 significance profiles for each word studied across the sorted genelist.")
-    ;; Contacted the authors; waiting for a reply.
+    ;; Contacted the authors; they said it will be GPL with the next
+    ;; release.  They will also move to Github.  That was in 2018 but
+    ;; nothing happened since.
     (license nonfree:undeclared)))
 
 (define-public rsat
