@@ -355,24 +355,23 @@ sequencing data.  However, users may also find this package useful as
 a ChIP-seq peak caller.")
       (license nonfree:undeclared))))
 
-(define-public python2-mirnylib
-  (let ((commit "ccec2e72dfa33eb04fe8b2ebd9bc2d88a1776d63")
+(define-public python-mirnylib
+  (let ((commit "2d27793111b63ac7d5f82ba3369f927c6c9745da")
         (revision "2"))
     (package
-      (name "python2-mirnylib")
-      (version (string-append "0-" revision "." (string-take commit 9)))
+      (name "python-mirnylib")
+      (version (git-version "0" revision commit))
       (source (origin
-                (method hg-fetch)
-                (uri (hg-reference
-                      (url "https://bitbucket.org/mirnylab/mirnylib")
-                      (changeset commit)))
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/mirnylab/mirnylib-legacy")
+                      (commit commit)))
                 (sha256
                  (base32
-                  "08ac4jg6bz4528x7sbnybkvjhk1w7jigmbl30qh4qlp6jfhf03bk"))))
+                  "15s3755f17lnayx1vrpr9pd5wra9kc083f1d8s2qivww5gdxim6q"))))
       (build-system python-build-system)
       (arguments
-       `(#:python ,python-2 ; python2 only
-         #:tests? #f ; tests expect additional test data
+       `(#:tests? #f ; tests expect additional test data
          #:phases
          (modify-phases %standard-phases
            (add-after 'unpack 'use-distutils
@@ -385,23 +384,26 @@ a ChIP-seq peak caller.")
        `(("gcc" ,gcc "lib")    ; libgomp
          ("hdf5" ,hdf5)))      ; FIXME: probably should be propagated by h5py
       (propagated-inputs
-       `(("python-biopython" ,python2-biopython)
-         ("python-joblib" ,python2-joblib)
-         ("python-bx-python" ,python2-bx-python)
-         ("python-numpy" ,python2-numpy)
-         ("python-scipy" ,python2-scipy)
-         ("python-pysam" ,python2-pysam)
-         ("python-matplotlib" ,python2-matplotlib)
-         ("python-h5py" ,python2-h5py)))
+       `(("python-biopython" ,python-biopython)
+         ("python-joblib" ,python-joblib)
+         ("python-bx-python" ,python-bx-python)
+         ("python-numpy" ,python-numpy)
+         ("python-scipy" ,python-scipy)
+         ("python-pysam" ,python-pysam)
+         ("python-matplotlib" ,python-matplotlib)
+         ("python-h5py" ,python-h5py)))
       (native-inputs
-       `(("python-cython" ,python2-cython)
-         ("python-setuptools" ,python2-setuptools)))
-      (home-page "https://bitbucket.org/mirnylab/mirnylib")
+       `(("python-cython" ,python-cython)
+         ("python-setuptools" ,python-setuptools)))
+      (home-page "https://github.com/mirnylab/mirnylib-legacy")
       (synopsis "Libraries shared between different mirnylab projects")
       (description
        "This package provides assorted libraries used by different mirnylab
 projects.")
-      (license nonfree:undeclared))))
+      (license license:expat))))
+
+(define-public python2-mirnylib
+  (deprecated-package "python2-mirnylib" python-mirnylib))
 
 ;; https://bitbucket.org/mirnylab/hiclib/issues/36/no-license-declaration
 (define-public python2-hiclib
