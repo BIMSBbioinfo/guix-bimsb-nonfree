@@ -1438,3 +1438,68 @@ cell types from single-cell RNA-seq data.")
     (description
      "Consistently handle genomic regions")
     (license nonfree:undeclared)))
+
+(define-public fanc
+  (let ((commit "012bdc08a6928cbf1542a7a11c224967e09cee8d")
+		(revision "0"))
+	(package
+	  (name "fanc")
+	  (version (git-version "0" revision commit))
+	  (source (origin
+				(method git-fetch)
+				(uri (git-reference
+					  (url "https://github.com/vaquerizaslab/fanc.git")
+					  (commit commit)))
+				(file-name (git-file-name name version))
+				(sha256
+				 (base32
+				  "0iqigh59cy7wpqrqwx66za2ch00gry3xp9n8mkg5s4c6sw23ii8f"))))
+	  (build-system python-build-system)
+	  (arguments
+       `(#:phases
+		 (modify-phases %standard-phases
+           (replace 'check
+			 (lambda* (#:key outputs inputs tests? #:allow-other-keys)
+               (if tests?
+                   (begin
+					 ;; Make installed package available for running the tests.
+					 (add-installed-pythonpath inputs outputs)
+					 ;; XXX: some of the tests here just take forever
+					 (delete-file "fanc/test/test_matrix.py")
+					 (invoke "pytest" "-vvv" "-m" "not longrunning"))
+                   #t))))))
+	  (propagated-inputs
+	   `(("python-numpy" ,python-numpy)
+		 ("python-scipy" ,python-scipy)
+		 ("python-pillow" ,python-pillow)
+		 ("python-matplotlib" ,python-matplotlib)
+		 ("python-pandas" ,python-pandas)
+		 ("python-pysam" ,python-pysam)
+		 ("python-biopython" ,python-biopython)
+		 ("python-pybedtools" ,python-pybedtools)
+		 ("python-pybigwig" ,python-pybigwig)
+		 ("python-pyyaml" ,python-pyyaml)
+		 ("python-pywavelets" ,python-pywavelets)
+		 ("python-tables" ,python-tables)
+		 ("python-seaborn" ,python-seaborn)
+		 ("python-future" ,python-future)
+		 ("python-gridmap" ,python-gridmap)
+		 ("python-intervaltree" ,python-intervaltree)
+		 ("python-genomic-regions" ,python-genomic-regions)
+		 ("python-scikit-learn" ,python-scikit-learn)
+		 ("python-scikit-image" ,python-scikit-image)
+		 ("python-cooler" ,python-cooler)
+		 ("python-tifffile" ,python-tifffile)
+		 ("python-imageio" ,python-imageio)
+		 ("python-h5py" ,python-h5py)
+		 ("python-progressbar2" ,python-progressbar2)
+		 ("python-msgpack" ,python-msgpack)
+		 ("python-msgpack-numpy" ,python-msgpack-numpy)))
+	  (native-inputs
+	   `(("python-cython" ,python-cython)
+		 ("python-pytest" ,python-pytest)))
+	  (home-page "https://github.com/vaquerizaslab/fanc")
+	  (synopsis "Framework for the analysis of C-like data")
+	  (description "FAN-C provides a pipeline for analysing Hi-C data
+starting at mapped paired-end sequencing reads.")
+	  (license (nonfree:non-free "Non-commercial")))))
