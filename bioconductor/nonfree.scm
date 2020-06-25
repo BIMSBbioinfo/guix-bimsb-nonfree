@@ -64,14 +64,13 @@ frequency matrices from 14 public sources, for multiple organisms.")
 (define-public r-cner
   (package
     (name "r-cner")
-    (version "1.20.0")
+    (version "1.24.0")
     (source
      (origin
        (method url-fetch)
        (uri (bioconductor-uri "CNEr" version))
        (sha256
-        (base32
-         "1filzgsyx22ckdspmqc6knc5gxw87vx0djzss6l69f50av8az1n8"))))
+        (base32 "0l2hmaanlzb2z967piv7bybv1sxgix5ywvqqsvlvag3mxda6y706"))))
     (properties `((upstream-name . "CNEr")))
     (build-system r-build-system)
     (inputs `(("zlib" ,zlib)))
@@ -79,6 +78,7 @@ frequency matrices from 14 public sources, for multiple organisms.")
      `(("r-annotate" ,r-annotate)
        ("r-biocgenerics" ,r-biocgenerics)
        ("r-biostrings" ,r-biostrings)
+       ("r-dbi" ,r-dbi)
        ("r-genomeinfodb" ,r-genomeinfodb)
        ("r-genomicalignments" ,r-genomicalignments)
        ("r-genomicranges" ,r-genomicranges)
@@ -94,6 +94,8 @@ frequency matrices from 14 public sources, for multiple organisms.")
        ("r-rtracklayer" ,r-rtracklayer)
        ("r-s4vectors" ,r-s4vectors)
        ("r-xvector" ,r-xvector)))
+    (native-inputs
+     `(("r-knitr" ,r-knitr)))
     (home-page "https://github.com/ge11232002/CNEr")
     (synopsis "CNE Detection and Visualization")
     (description
