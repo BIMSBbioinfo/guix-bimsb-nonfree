@@ -1,5 +1,6 @@
 ;;; GNU Guix --- Functional package management for GNU
 ;;; Copyright © 2019 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
+;;; Copyright © 2020 Mădălin Ionel Patrașcu <madalinionel.patrascu@mdc-berlin.de>
 ;;;
 ;;; This file is NOT part of GNU Guix, but is supposed to be used with GNU
 ;;; Guix and thus has the same license.
@@ -196,3 +197,39 @@ position frequency matrix (PFM), position weight matrix (PWM) and information
 content matrix (ICM).  It can also scan putative TFBS from sequence/alignment,
 query JASPAR database and provides a wrapper of the new motif discovery software.")
     (license license:gpl2)))
+
+(define-public r-motifmatchr
+  (package
+    (name "r-motifmatchr")
+    (version "1.10.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (bioconductor-uri "motifmatchr" version))
+       (sha256
+        (base32 "145d9nykhzaf9kr30iq38c9yyv2pn459b7q4ypfmgi1g302lxfxz"))))
+    (properties `((upstream-name . "motifmatchr")))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-biostrings" ,r-biostrings)
+       ("r-bsgenome" ,r-bsgenome)
+       ("r-genomeinfodb" ,r-genomeinfodb)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-iranges" ,r-iranges)
+       ("r-matrix" ,r-matrix)
+       ("r-rcpp" ,r-rcpp)
+       ("r-rcpparmadillo" ,r-rcpparmadillo)
+       ("r-rsamtools" ,r-rsamtools)
+       ("r-s4vectors" ,r-s4vectors)
+       ("r-summarizedexperiment" ,r-summarizedexperiment)
+       ("r-tfbstools" ,r-tfbstools)))
+    (native-inputs `(("r-knitr" ,r-knitr)))
+    (home-page
+     "https://bioconductor.org/packages/release/bioc/html/motifmatchr.html")
+    (synopsis "Motif matching with genomic ranges or sequences")
+    (description
+     "@code{r-motifmatchr} is designed to find motif matches motif position weight
+matrix (PWM) or poition frequency matrix (PFM) and genomic ranges or sequences and
+returns either which ranges/sequences match which motifs or the positions of the
+matches.")
+    (license license:gpl3)))
