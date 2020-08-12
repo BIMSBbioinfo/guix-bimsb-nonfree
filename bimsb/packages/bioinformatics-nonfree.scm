@@ -218,6 +218,17 @@ to write a free software alternative rather than using this tool."))))
 	     "-DBoost_NO_BOOST_CMAKE=ON")
        #:phases
        (modify-phases %standard-phases
+         (add-after 'set-paths 'hide-default-gcc
+           (lambda* (#:key inputs #:allow-other-keys)
+             (let ((gcc (assoc-ref inputs "gcc")))
+               ;; Remove the default GCC from CPLUS_INCLUDE_PATH to prevent
+               ;; conflicts with the GCC 5 input.
+               (setenv "CPLUS_INCLUDE_PATH"
+                       (string-join
+                        (delete (string-append gcc "/include/c++")
+                                (string-split (getenv "CPLUS_INCLUDE_PATH") #\:))
+                        ":"))
+               #t)))
          (add-after 'unpack 'enter-dir (lambda _ (chdir "src") #t))
          (add-after 'enter-dir 'fix-includes
            (lambda _
@@ -241,7 +252,7 @@ to write a free software alternative rather than using this tool."))))
                           "configureValidation.pl"))
               #t))))))
     (native-inputs
-     `(("gcc" ,gcc-4.9)))
+     `(("gcc@4" ,gcc-4.9)))
     (inputs
      `(;; We need the older version of Boost although this could be
        ;; built with 1.55 with only minor changes.  The reason is
