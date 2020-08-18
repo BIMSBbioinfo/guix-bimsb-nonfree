@@ -155,42 +155,6 @@ different origins (meta-analysis) to increase the power of the
 identification.")
     (license (nonfree:non-free "Non-commercial"))))
 
-(define-public r-motifmatchr
-  (package
-    (name "r-motifmatchr")
-    (version "1.10.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "motifmatchr" version))
-       (sha256
-        (base32 "145d9nykhzaf9kr30iq38c9yyv2pn459b7q4ypfmgi1g302lxfxz"))))
-    (properties `((upstream-name . "motifmatchr")))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-biostrings" ,r-biostrings)
-       ("r-bsgenome" ,r-bsgenome)
-       ("r-genomeinfodb" ,r-genomeinfodb)
-       ("r-genomicranges" ,r-genomicranges)
-       ("r-iranges" ,r-iranges)
-       ("r-matrix" ,r-matrix)
-       ("r-rcpp" ,r-rcpp)
-       ("r-rcpparmadillo" ,r-rcpparmadillo)
-       ("r-rsamtools" ,r-rsamtools)
-       ("r-s4vectors" ,r-s4vectors)
-       ("r-summarizedexperiment" ,r-summarizedexperiment)
-       ("r-tfbstools" ,r-tfbstools)))
-    (native-inputs `(("r-knitr" ,r-knitr)))
-    (home-page
-     "https://bioconductor.org/packages/release/bioc/html/motifmatchr.html")
-    (synopsis "Motif matching with genomic ranges or sequences")
-    (description
-     "@code{r-motifmatchr} is designed to find motif matches motif position weight
-matrix (PWM) or poition frequency matrix (PFM) and genomic ranges or sequences and
-returns either which ranges/sequences match which motifs or the positions of the
-matches.")
-    (license license:gpl3)))
-
 (define-public r-chromvar
   (package
     (name "r-chromvar")

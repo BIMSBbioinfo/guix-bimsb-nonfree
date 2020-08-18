@@ -206,6 +206,42 @@ Matrix} (PWM) and @dfn{Information Content Matrix} (ICM).  It can also
 scan putative TFBS from sequence/alignment, query JASPAR database and
 provides a wrapper of de novo motif discovery software.")
     (license license:gpl2)))
+
+;; Depends on tfbstools, which is tainted.
+(define-public r-motifmatchr
+  (package
+    (name "r-motifmatchr")
+    (version "1.10.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (bioconductor-uri "motifmatchr" version))
+       (sha256
+        (base32
+         "145d9nykhzaf9kr30iq38c9yyv2pn459b7q4ypfmgi1g302lxfxz"))))
+    (properties `((upstream-name . "motifmatchr")))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-biostrings" ,r-biostrings)
+       ("r-bsgenome" ,r-bsgenome)
+       ("r-genomeinfodb" ,r-genomeinfodb)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-iranges" ,r-iranges)
+       ("r-matrix" ,r-matrix)
+       ("r-rcpp" ,r-rcpp)
+       ("r-rcpparmadillo" ,r-rcpparmadillo)
+       ("r-rsamtools" ,r-rsamtools)
+       ("r-s4vectors" ,r-s4vectors)
+       ("r-summarizedexperiment"
+        ,r-summarizedexperiment)
+       ("r-tfbstools" ,r-tfbstools)))
+    (native-inputs `(("r-knitr" ,r-knitr)))
+    (home-page "https://bioconductor.org/packages/motifmatchr")
+    (synopsis "Fast motif matching in R")
+    (description
+     "Quickly find motif matches for many motifs and many sequences.
+This package wraps C++ code from the MOODS motif calling library.")
+    (license license:gpl3)))
 ;; Although this program is released under the GPL it depends on
 ;; ViennaRNA, which is non-free software.
 (define-public mirdeep2
