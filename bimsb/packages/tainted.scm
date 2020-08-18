@@ -242,6 +242,54 @@ provides a wrapper of de novo motif discovery software.")
      "Quickly find motif matches for many motifs and many sequences.
 This package wraps C++ code from the MOODS motif calling library.")
     (license license:gpl3)))
+
+;; Tainted due to r-tfbstools.
+(define-public r-chromvar
+  (package
+    (name "r-chromvar")
+    (version "1.10.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (bioconductor-uri "chromVAR" version))
+       (sha256
+        (base32 "0igzsa206m29r7fhpkgkyllii30rd4kbiwqby8nz2cz86znmmx5w"))))
+    (properties `((upstream-name . "chromVAR")))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-biocgenerics" ,r-biocgenerics)
+       ("r-biocparallel" ,r-biocparallel)
+       ("r-biostrings" ,r-biostrings)
+       ("r-bsgenome" ,r-bsgenome)
+       ("r-dt" ,r-dt)
+       ("r-genomeinfodb" ,r-genomeinfodb)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-ggplot2" ,r-ggplot2)
+       ("r-iranges" ,r-iranges)
+       ("r-matrix" ,r-matrix)
+       ("r-miniui" ,r-miniui)
+       ("r-nabor" ,r-nabor)
+       ("r-plotly" ,r-plotly)
+       ("r-rcolorbrewer" ,r-rcolorbrewer)
+       ("r-rcpp" ,r-rcpp)
+       ("r-rcpparmadillo" ,r-rcpparmadillo)
+       ("r-rsamtools" ,r-rsamtools)
+       ("r-rtsne" ,r-rtsne)
+       ("r-s4vectors" ,r-s4vectors)
+       ("r-shiny" ,r-shiny)
+       ("r-summarizedexperiment"
+        ,r-summarizedexperiment)
+       ("r-tfbstools" ,r-tfbstools))) ; tainted
+    (native-inputs `(("r-knitr" ,r-knitr)))
+    (home-page "https://bioconductor.org/packages/release/bioc/html/chromVAR.html")
+    (synopsis "Determine chromatin variation across regions")
+    (description
+     "This package @code{r-chromvar} determines variation in chromatin accessibility
+across sets of annotations or peaks.  @code{r-chromvar} is designed primarily for
+single-cell or sparse chromatin accessibility data like single cell assay for
+transposase-accessible chromatin using sequencing (@code{scATAC-seq} or sparse bulk
+ATAC or deoxyribonuclease sequence (@code{DNAse-seq}) experiments.")
+    (license license:expat)))
 ;; Although this program is released under the GPL it depends on
 ;; ViennaRNA, which is non-free software.
 (define-public mirdeep2
