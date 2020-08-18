@@ -290,6 +290,57 @@ single-cell or sparse chromatin accessibility data like single cell assay for
 transposase-accessible chromatin using sequencing (@code{scATAC-seq} or sparse bulk
 ATAC or deoxyribonuclease sequence (@code{DNAse-seq}) experiments.")
     (license license:expat)))
+
+;; Tainted because of r-motifmatchr.
+(define-public r-archr
+  (let ((commit "ddcaae4a6093685875052219141e5ea41030fc55")
+        (revision "1"))
+    (package
+      (name "r-archr")
+      (version (git-version "0.9.5" revision commit))
+      (source
+       (origin
+         (method git-fetch)
+         (uri (git-reference
+               (url "https://github.com/GreenleafLab/ArchR")
+               (commit commit)))
+         (file-name (git-file-name name version))
+         (sha256
+          (base32
+           "030i419viq3v6r8hnkv03xjqc2fi6378chri878l23g40h31jk45"))))
+      (properties `((upstream-name . "ArchR")))
+      (build-system r-build-system)
+      (propagated-inputs
+       `(("r-biocgenerics" ,r-biocgenerics)
+         ("r-biostrings" ,r-biostrings)
+         ("r-chromvar" ,r-chromvar)
+         ("r-complexheatmap" ,r-complexheatmap)
+         ("r-data-table" ,r-data-table)
+         ("r-genomicranges" ,r-genomicranges)
+         ("r-ggplot2" ,r-ggplot2)
+         ("r-ggrepel" ,r-ggrepel)
+         ("r-gridextra" ,r-gridextra)
+         ("r-gtable" ,r-gtable)
+         ("r-gtools" ,r-gtools)
+         ("r-magrittr" ,r-magrittr)
+         ("r-matrix" ,r-matrix)
+         ("r-matrixstats" ,r-matrixstats)
+         ("r-motifmatchr" ,r-motifmatchr) ; tainted
+         ("r-nabor" ,r-nabor)
+         ("r-plyr" ,r-plyr)
+         ("r-rcpp" ,r-rcpp)
+         ("r-rhdf5" ,r-rhdf5)
+         ("r-rsamtools" ,r-rsamtools)
+         ("r-s4vectors" ,r-s4vectors)
+         ("r-stringr" ,r-stringr)
+         ("r-summarizedexperiment" ,r-summarizedexperiment)
+         ("r-uwot" ,r-uwot)))
+      (home-page "https://github.com/GreenleafLab/ArchR")
+      (synopsis "Analyze single-cell regulatory chromatin in R")
+      (description
+       "This package is designed to streamline scATAC analyses in R.")
+      (license license:gpl2+))))
+
 ;; Although this program is released under the GPL it depends on
 ;; ViennaRNA, which is non-free software.
 (define-public mirdeep2
