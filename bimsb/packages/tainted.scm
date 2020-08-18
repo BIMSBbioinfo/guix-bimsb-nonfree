@@ -160,6 +160,52 @@ the results with scatterplots, histograms, MA plots, standard
 deviation (SD) plots, coefficient of variation (CV) plots.")
     (license license:gpl3)))
 
+;; This depends on CNEr, which is non-free.
+(define-public r-tfbstools
+  (package
+    (name "r-tfbstools")
+    (version "1.26.0")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (bioconductor-uri "TFBSTools" version))
+       (sha256
+        (base32
+         "0xa9f8acw5f4xfkfz0b8g0k4y892an7csfhf0cniqp6dr7255zsz"))))
+    (properties `((upstream-name . "TFBSTools")))
+    (build-system r-build-system)
+    (propagated-inputs
+     `(("r-biobase" ,r-biobase)
+       ("r-biocgenerics" ,r-biocgenerics)
+       ("r-biocparallel" ,r-biocparallel)
+       ("r-biostrings" ,r-biostrings)
+       ("r-bsgenome" ,r-bsgenome)
+       ("r-catools" ,r-catools)
+       ("r-cner" ,r-cner)
+       ("r-dbi" ,r-dbi)
+       ("r-dirichletmultinomial" ,r-dirichletmultinomial)
+       ("r-genomeinfodb" ,r-genomeinfodb)
+       ("r-genomicranges" ,r-genomicranges)
+       ("r-gtools" ,r-gtools)
+       ("r-iranges" ,r-iranges)
+       ("r-rsqlite" ,r-rsqlite)
+       ("r-rtracklayer" ,r-rtracklayer)
+       ("r-s4vectors" ,r-s4vectors)
+       ("r-seqlogo" ,r-seqlogo)
+       ("r-tfmpvalue" ,r-tfmpvalue)
+       ("r-xml" ,r-xml)
+       ("r-xvector" ,r-xvector)))
+    (native-inputs `(("r-knitr" ,r-knitr)))
+    (home-page "https://github.com/ge11232002/TFBSTools")
+    (synopsis "Transcription factor binding site (TFBS) analysis")
+    (description
+     "TFBSTools is a package for the analysis and manipulation of
+transcription factor binding sites.  It includes matrices conversion
+between @dfn{Position Frequency Matrix} (PFM), @dfn{Position Weight
+Matrix} (PWM) and @dfn{Information Content Matrix} (ICM).  It can also
+scan putative TFBS from sequence/alignment, query JASPAR database and
+provides a wrapper of de novo motif discovery software.")
+    (license license:gpl2)))
 ;; Although this program is released under the GPL it depends on
 ;; ViennaRNA, which is non-free software.
 (define-public mirdeep2
