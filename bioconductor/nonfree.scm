@@ -1,5 +1,5 @@
 ;;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2019 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
+;;; Copyright © 2019, 2020, 2021 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
 ;;; Copyright © 2020 Mădălin Ionel Patrașcu <madalinionel.patrascu@mdc-berlin.de>
 ;;;
 ;;; This file is NOT part of GNU Guix, but is supposed to be used with GNU
@@ -66,13 +66,13 @@ frequency matrices from 14 public sources, for multiple organisms.")
 (define-public r-cner
   (package
     (name "r-cner")
-    (version "1.24.0")
+    (version "1.26.0")
     (source
      (origin
        (method url-fetch)
        (uri (bioconductor-uri "CNEr" version))
        (sha256
-        (base32 "0l2hmaanlzb2z967piv7bybv1sxgix5ywvqqsvlvag3mxda6y706"))))
+        (base32 "0qy4pm23vyy23zwsjkf0mpf2c0p54nq26w9lq7j0ld4bx9l3jc6c"))))
     (properties `((upstream-name . "CNEr")))
     (build-system r-build-system)
     (inputs `(("zlib" ,zlib)))
