@@ -63,50 +63,6 @@ frequency matrices from 14 public sources, for multiple organisms.")
     (license (nonfree:non-free
               "https://bioconductor.org/packages/release/bioc/licenses/MotifDb/LICENSE"))))
 
-(define-public r-cner
-  (package
-    (name "r-cner")
-    (version "1.26.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "CNEr" version))
-       (sha256
-        (base32 "0qy4pm23vyy23zwsjkf0mpf2c0p54nq26w9lq7j0ld4bx9l3jc6c"))))
-    (properties `((upstream-name . "CNEr")))
-    (build-system r-build-system)
-    (inputs `(("zlib" ,zlib)))
-    (propagated-inputs
-     `(("r-annotate" ,r-annotate)
-       ("r-biocgenerics" ,r-biocgenerics)
-       ("r-biostrings" ,r-biostrings)
-       ("r-dbi" ,r-dbi)
-       ("r-genomeinfodb" ,r-genomeinfodb)
-       ("r-genomicalignments" ,r-genomicalignments)
-       ("r-genomicranges" ,r-genomicranges)
-       ("r-ggplot2" ,r-ggplot2)
-       ("r-go-db" ,r-go-db)
-       ("r-iranges" ,r-iranges)
-       ("r-keggrest" ,r-keggrest)
-       ("r-powerlaw" ,r-powerlaw)
-       ("r-r-utils" ,r-r-utils)
-       ("r-readr" ,r-readr)
-       ("r-reshape2" ,r-reshape2)
-       ("r-rsqlite" ,r-rsqlite)
-       ("r-rtracklayer" ,r-rtracklayer)
-       ("r-s4vectors" ,r-s4vectors)
-       ("r-xvector" ,r-xvector)))
-    (native-inputs
-     `(("r-knitr" ,r-knitr)))
-    (home-page "https://github.com/ge11232002/CNEr")
-    (synopsis "CNE Detection and Visualization")
-    (description
-     "This package provides tools for large-scale identification and
-advanced visualization of sets of conserved noncoding elements.")
-    ;; src/ucsc is non-free (derived from Kent Utils)
-    (license (list license:gpl2
-                   (nonfree:non-free "Academic use only.")))))
-
 (define-public r-minet
   (package
     (name "r-minet")
