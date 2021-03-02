@@ -1,5 +1,5 @@
 ;;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2015, 2016, 2017, 2018, 2019, 2020 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
+;;; Copyright © 2015, 2016, 2017, 2018, 2019, 2020, 2021 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
 ;;; Copyright © 2017 CM Massimo <carlomaria.massimo@mdc-berlin.de>
 ;;; Copyright © 2018, 2019 Marcel Schilling <marcel.schilling@mdc-berlin.de>
 ;;;
@@ -1014,70 +1014,78 @@ experiments.")
       (license nonfree:undeclared))))
 
 (define-public cufflinks
-  (package
-    (name "cufflinks")
-    (version "2.2.1")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append "http://cole-trapnell-lab.github.io/"
-                                  "cufflinks/assets/downloads/cufflinks-"
-                                  version ".tar.gz"))
-              (sha256
-               (base32
-                "1bnm10p8m7zq4qiipjhjqb24csiqdm1pwc8c795z253r2xk6ncg8"))))
-    (build-system gnu-build-system)
-    (arguments
-     `(#:make-flags
-       (list
-        ;; The includes for "eigen" are located in a subdirectory.
-        (string-append "EIGEN_CPPFLAGS="
-                       "-I" (assoc-ref %build-inputs "eigen")
-                       "/include/eigen3/")
-        ;; Cufflinks must be linked with various boost libraries.
-        (string-append "LDFLAGS="
-                       (string-join '("-lboost_system"
-                                      "-lboost_serialization"
-                                      "-lboost_thread"))))
-       #:phases
-       (modify-phases %standard-phases
-         (add-after 'unpack 'fix-search-for-bam
-           (lambda _
-             (substitute* '("ax_bam.m4"
-                            "configure"
-                            "src/hits.h")
-               (("<bam/sam\\.h>") "<samtools/sam.h>")
-               (("<bam/bam\\.h>") "<samtools/bam.h>")
-               (("<bam/version\\.hpp>") "<samtools/version.h>"))
-             #t)))
-       #:configure-flags
-       (list (string-append "--with-bam="
-                            (assoc-ref %build-inputs "samtools")))))
-    (inputs
-     `(("eigen" ,eigen)
-       ("samtools" ,samtools-0.1)
-       ("htslib" ,htslib)
-       ("boost" ,boost-1.55)
-       ("python" ,python-2)
-       ("zlib" ,zlib)))
-    (native-inputs
-     `(("gcc" ,gcc-4.9)))
-    (home-page "http://cole-trapnell-lab.github.io/cufflinks/")
-    (synopsis "Transcriptome assembly and RNA-Seq expression analysis")
-    (description
-     "Cufflinks assembles RNA transcripts, estimates their abundances,
+  ;; This commit includes build fixes
+  (let ((commit "dc3b0cb72a4ac2b6bbc887099e71fc0c21e107b7")
+        (revision "1"))
+    (package
+      (name "cufflinks")
+      (version (git-version "2.2.1" revision commit))
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/cole-trapnell-lab/cufflinks")
+                      (commit commit)))
+                (file-name (git-file-name name version))
+                (sha256
+                 (base32
+                  "1mgmakzg4g174ry0idyzjwysssb5ak72ybk0qha8vi6raylhd3if"))))
+      (build-system gnu-build-system)
+      (arguments
+       `(#:make-flags
+         (list
+          ;; Cufflinks must be linked with various boost libraries.
+          (string-append "BOOST_LDFLAGS=-L"
+                         (assoc-ref %build-inputs "boost")
+                         "/lib"))
+         #:phases
+         (modify-phases %standard-phases
+           (add-after 'unpack 'fix-library-detection
+             (lambda _
+               (substitute* "ax_boost_system.m4"
+                 (("BOOSTLIBDIR/boost_system")
+                  "BOOSTLIBDIR/libboost_system"))
+               ;; The includes for "eigen" are located in a subdirectory.
+               (substitute* "ax_check_eigen.m4"
+                 (("ac_eigen_path/include")
+                  "ac_eigen_path/include/eigen3")))))
+         #:configure-flags
+         (cons* (string-append "--with-bam="
+                               (assoc-ref %build-inputs "htslib"))
+                (string-append "--with-eigen="
+                               (assoc-ref %build-inputs "eigen"))
+                (map (lambda (lib)
+                       (string-append "--with-boost-" lib "=boost_" lib))
+                     '("system"
+                       "filesystem"
+                       "serialization"
+                       "thread")))))
+      (inputs
+       `(("eigen" ,eigen)
+         ("htslib" ,htslib)
+         ("boost" ,boost)
+         ("python" ,python-2)
+         ("zlib" ,zlib)))
+      (native-inputs
+       `(("autoconf" ,autoconf)
+         ("automake" ,automake)))
+      (home-page "http://cole-trapnell-lab.github.io/cufflinks/")
+      (synopsis "Transcriptome assembly and RNA-Seq expression analysis")
+      (description
+       "Cufflinks assembles RNA transcripts, estimates their abundances,
 and tests for differential expression and regulation in RNA-Seq
 samples.  It accepts aligned RNA-Seq reads and assembles the
 alignments into a parsimonious set of transcripts.  Cufflinks then
 estimates the relative abundances of these transcripts based on how
 many reads support each one, taking into account biases in library
 preparation protocols.")
-    ;; The sources include a modified third-party library "locfit"
-    ;; that is released under a license asking any use for benchmarks
-    ;; to be authorized.  A GPL version of locfit (by the same author)
-    ;; exists in the form of "r-locfit", but it cannot be used without
-    ;; modifications.
-    (license (list license:boost1.0
-                   (nonfree:non-free "Not to be used for benchmarks")))))
+      ;; The sources include a modified third-party library "locfit"
+      ;; that is released under a license asking any use for benchmarks
+      ;; to be authorized.  A GPL version of locfit (by the same author)
+      ;; exists in the form of "r-locfit", but it cannot be used without
+      ;; modifications.
+      ;; See also https://github.com/cole-trapnell-lab/cufflinks/issues/129
+      (license (list license:boost1.0
+                     (nonfree:non-free "Not to be used for benchmarks"))))))
 
 (define-public python2-rnaseqlib
   (let ((commit "2e8fb07190175c54101d16364072d7372c07815b")
