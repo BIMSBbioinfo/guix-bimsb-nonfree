@@ -1,7 +1,7 @@
 ;;; GNU Guix --- Functional package management for GNU
 ;;; Copyright © 2015, 2016, 2017, 2018, 2019, 2020, 2021 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
 ;;; Copyright © 2017 CM Massimo <carlomaria.massimo@mdc-berlin.de>
-;;; Copyright © 2018, 2019 Marcel Schilling <marcel.schilling@mdc-berlin.de>
+;;; Copyright © 2018, 2019, 2021 Marcel Schilling <marcel.schilling@uni-luebeck.de>
 ;;;
 ;;; This file is NOT part of GNU Guix, but is supposed to be used with GNU
 ;;; Guix and thus has the same license.
@@ -28,6 +28,7 @@
   #:use-module (guix git-download)
   #:use-module (guix utils)
   #:use-module (guix build-system cmake)
+  #:use-module (guix build-system copy)
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system python)
   #:use-module (guix build-system perl)
@@ -1524,3 +1525,35 @@ cell types from single-cell RNA-seq data.")
 	  (description "FAN-C provides a pipeline for analysing Hi-C data
 starting at mapped paired-end sequencing reads.")
 	  (license (nonfree:non-free "Non-commercial")))))
+
+;; This perl script has no license declared but contains an 'All Rights
+;; Reserved' Copyright statement.
+(define-public targetscan
+  (package
+    (name "targetscan")
+    (version "7.0")
+    (source (origin
+              (method url-fetch/zipbomb)
+              (uri (string-append
+                     "http://www.targetscan.org/vert_72"
+                     "/vert_72_data_download/targetscan_70.zip"))
+              (sha256
+               (base32
+                "0jfpkc0rbz600l2h56rmnnz6phcvjak37zl3yzn5hahgj8mcf8vf"))))
+    (build-system copy-build-system)
+    (arguments
+     '(#:install-plan
+       '(("targetscan_70.pl" "bin/")
+         ("README_70.txt" "doc/targetscan_70/")
+         ("targetscan_70_output.txt" "share/targetscan_70/")
+         ("UTR_Sequences_sample.txt" "share/targetscan_70/")
+         ("miR_Family_info_sample.txt" "share/targetscan_70/"))))
+    (native-inputs
+     `(("unzip" ,unzip)))
+    (inputs
+     `(("perl" ,perl)))
+    (synopsis "This program predicts miRNA targets using the TargetScanS
+algorithm.")
+    (description "It produces output as displayed in TargetScan.")
+    (home-page "http://www.targetscan.org")
+    (license (nonfree:non-free "All Rights Reserved"))))
