@@ -1,6 +1,6 @@
 ;;; GNU Guix --- Functional package management for GNU
 ;;; Copyright © 2019, 2020 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
-;;; Copyright © 2019 Marcel Schilling <marcel.schilling@mdc-berlin.de>
+;;; Copyright © 2019, 2020, 2021 Marcel Schilling <marcel.schilling@uni-luebeck.de>
 ;;;
 ;;; This file is NOT part of GNU Guix, but is supposed to be used with GNU
 ;;; Guix and thus has the same license.
@@ -177,7 +177,7 @@ deviation (SD) plots, coefficient of variation (CV) plots.")
                 "1mlihj6c6zkqsvrdqnz5wjz4annjr8yi6slv63bbcl4bdwdywcd6"))))
     (build-system gnu-build-system)
     (arguments
-     `(#:tests? #f ;; no check target
+     `(#:tests? #f ;; no check target; TODO: Run tutorial as test?
        #:phases
        (modify-phases %standard-phases
          (delete 'configure)
@@ -185,27 +185,26 @@ deviation (SD) plots, coefficient of variation (CV) plots.")
            (lambda* (#:key inputs outputs #:allow-other-keys)
              (let ((out (assoc-ref outputs "out")))
                ;; patch scripts checking for ../install_successful file
-               (for-each
-                (lambda (script)
-                  (substitute* script
-                    (("\\$bn/\\.\\./install_successful")
-                     (string-append out
-                                    "/share/mirdeep2/install_successful"))))
-                '("src/mapper.pl"
-                  "src/miRDeep2.pl"
-                  "src/quantifier.pl"))
+               (substitute* '("src/mapper.pl" "src/miRDeep2.pl"
+                              "src/quantifier.pl")
+                 (("(\\$a=)`which (miRDeep2\\.pl)`" _ lhs script)
+                   (string-append lhs "\"" out "/bin/" script "\""))
+                 (("\\$bn/\\.\\./install_successful")
+                   (string-append out "/share/mirdeep2/install_successful")))
                ;; patch script using ../Rfam_for_miRDeep.fa file
                (substitute* "src/miRDeep2.pl"
-                 (("\\$\\{scripts\\}/\\.\\./Rfam_for_miRDeep\\.fa")
-                  (string-append out "/share/mirdeep2/Rfam_for_miRDeep.fa"))
-                 (("\\$scripts/\\.\\./Rfam_for_miRDeep\\.fa")
-                  (string-append out "/share/mirdeep2/Rfam_for_miRDeep.fa"))))
+                 (("\\$\\{?scripts\\}?/\\.\\.(/Rfam_for_miRDeep\\.fa)" _ file)
+                  (string-append out "/share/mirdeep2" file))
+                 ;; Comment out all lines featuring the `scripts` variable for
+                 ;; paths relative to the script.
+                 ((".*\\$scripts.*" line)
+                  (string-append "#" line))))
              ;; patch script using $(dirname `which miRDeep2.pl`)/indexes dir
              (substitute* "src/make_html.pl"
                (("`which miRDeep2\\.pl`")
                 "`realpath ~/.local/share/mirdeep2` . \"/\"")
-               (("mkdir \"\\$\\{scripts\\}indexes")
-                "mkdir -p \"${scripts}indexes"))
+               (("mkdir (\"\\$\\{scripts\\}indexes)" _ path)
+                (string-append "mkdir -p " path)))
              #t))
          (replace 'install
            (lambda* (#:key inputs outputs #:allow-other-keys)
