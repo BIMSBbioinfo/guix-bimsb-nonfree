@@ -177,7 +177,7 @@ deviation (SD) plots, coefficient of variation (CV) plots.")
                 "1mlihj6c6zkqsvrdqnz5wjz4annjr8yi6slv63bbcl4bdwdywcd6"))))
     (build-system gnu-build-system)
     (arguments
-     `(#:tests? #f ;; no check target; TODO: Run tutorial as test?
+     `(#:tests? #f ;; no check target; instead: test after install (see below)
        #:phases
        (modify-phases %standard-phases
          (delete 'configure)
@@ -244,7 +244,36 @@ deviation (SD) plots, coefficient of variation (CV) plots.")
                            "miRDeep2.pl"
                            "prepare_signature.pl"
                            "quantifier.pl"))
-               #t))))))
+               #t)))
+         (add-after 'wrap-perl-scripts 'test
+           (lambda* (#:key inputs outputs #:allow-other-keys)
+             (setenv "PATH" (string-append (assoc-ref outputs "out") "/bin:"
+                                           (getenv "PATH")))
+             (with-directory-excursion "tutorial_dir"
+               ;; Script writes to "~/.local/share/mirdeep2", but
+               ;; HOME=/homeless-shelter by default:
+               (setenv "HOME" ".")
+               (mkdir-p ".local/share/mirdeep2")
+               ;; Run script in bash to processs output for error detection:
+               (invoke
+                 "bash" "-c"
+                 (string-append
+                   ;; Script always returns 0, reports errors to stdout/stderr.
+                   "./run_tut.sh 2>&1"
+                   ;; Copy (combined) output to stderr for build log:
+                   " | while read output; do"
+                   " echo \"$output\";"
+                   " echo \"$output\" >&2; "
+                   " done"
+                   ;; Check output (the copy on stdout) for error messages.
+                   " | grep -q"
+                   ;; Printed to stdout when the script detects an error:
+                   " -e 'An error occured'"
+                   ;; Ignored by the script, but on stderr:
+                   " -e 'No such file or directory'"
+                   " -e 'Permission denied'"
+                   ;; Any error message found: failure; else: success.
+                   "&& exit 1; exit 0"))))))))
     (inputs
      `(("bowtie1" ,bowtie1)
        ("perl-pdf-api2" ,perl-pdf-api2)
