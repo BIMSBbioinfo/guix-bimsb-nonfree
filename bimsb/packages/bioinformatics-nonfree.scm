@@ -208,8 +208,7 @@ to write a free software alternative rather than using this tool."))))
               (snippet
                `(begin
                   (delete-file "redist/boost_1_44_0.tar.gz")
-                  (delete-file "redist/cmake-2.8.4.tar.gz")
-                  #t))))
+                  (delete-file "redist/cmake-2.8.4.tar.gz")))))
     (arguments
      `(#:configure-flags
        (list (string-append "-DBOOST_ROOT="
@@ -228,9 +227,8 @@ to write a free software alternative rather than using this tool."))))
                        (string-join
                         (delete (string-append gcc "/include/c++")
                                 (string-split (getenv "CPLUS_INCLUDE_PATH") #\:))
-                        ":"))
-               #t)))
-         (add-after 'unpack 'enter-dir (lambda _ (chdir "src") #t))
+                        ":")))))
+         (add-after 'unpack 'enter-dir (lambda _ (chdir "src")))
          (add-after 'enter-dir 'fix-includes
            (lambda _
              (substitute* "c++/include/common/FileConversion.hh"
@@ -238,8 +236,7 @@ to write a free software alternative rather than using this tool."))))
                 (string-append line "\n#include <stdint.h>")))
              (substitute* "c++/include/demultiplex/BarcodeTranslationTable.hh"
                (("^namespace casava" line)
-                (string-append "#include <stdint.h>\n" line)))
-             #t))
+                (string-append "#include <stdint.h>\n" line)))))
          (add-after 'install 'wrap-perl-scripts
           (lambda* (#:key inputs outputs #:allow-other-keys)
             ;; Make sure perl scripts finds all perl inputs at runtime.
@@ -250,8 +247,7 @@ to write a free software alternative rather than using this tool."))))
                               (,(getenv "PERL5LIB")))))
                         '("configureBclToFastq.pl"
                           "configureQseqToFastq.pl"
-                          "configureValidation.pl"))
-              #t))))))
+                          "configureValidation.pl"))))))))
     (native-inputs
      `(("gcc@4" ,gcc-4.9)))
     (inputs
