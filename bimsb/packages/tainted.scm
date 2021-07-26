@@ -23,6 +23,7 @@
   #:use-module (guix packages)
   #:use-module (guix download)
   #:use-module (guix git-download)
+  #:use-module (guix build-system cmake)
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system r)
   #:use-module (gnu packages)
@@ -422,3 +423,48 @@ frameworks.  EnsembleClust utilizes all possible sequence alignments
 and all possible secondary structures.")
     (home-page "http://bpla-kernel.dna.bio.keio.ac.jp/clustering/")
     (license license:gpl2+)))
+
+;; This software is released under the GPL but depends on the non-free
+;; ViennaRNA, so we cannot add it to Guix upstream.
+(define-public rnanue
+  (let ((commit "7fb7ab98d9d0f67fc61e5f0e728ad4b6da0833b1")
+        (revision "1"))
+    (package
+      (name "rnanue")
+      (version (git-version "0.1.0" revision commit))
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/Ibvt/RNAnue/")
+                      (commit commit)))
+                (file-name (git-file-name name version))
+                (sha256
+                 (base32
+                  "1kcab00xsgz1rd3shjsa8s23pqcpqzwqfagl8qvp6g9ddxz1d5ii"))
+                (modules '((guix build utils)))
+                (snippet
+                 '(delete-file-recursively "build"))))
+      (build-system cmake-build-system)
+      (arguments
+       `(#:tests? #false ; there are none
+         #:phases
+         (modify-phases %standard-phases
+           (add-after 'unpack 'enter-source-directory
+             (lambda _
+               (chdir "source")))
+           (replace 'install
+             (lambda* (#:key inputs outputs #:allow-other-keys)
+               (let* ((out (assoc-ref outputs "out"))
+                      (bin (string-append out "/bin")))
+                 (install-file "RNAnue" bin)))))))
+      (inputs
+       `(("boost" ,boost)
+         ("segemehl" ,segemehl)
+         ("seqan" ,seqan)
+         ("viennarna" ,viennarna)))
+      (home-page "https://github.com/Ibvt/RNAnue")
+      (synopsis "Detect RNA-RNA interactions from Direct-Duplex-Detection data")
+      (description
+       "RNAnue is a comprehensive analysis to detect RNA-RNA
+interactions from @dfn{Direct-Duplex-Detection} (DDD) data.")
+      (license license:gpl3+))))
