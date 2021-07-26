@@ -557,15 +557,15 @@ including SNPS, microsatellites, RFLPs and AFLPs.")
 (define-public viennarna
   (package
     (name "viennarna")
-    (version "2.2.10")
+    (version "2.4.18")
     (source (origin
               (method url-fetch)
-              (uri (string-append "http://www.tbi.univie.ac.at/RNA/"
-                                  "download/sourcecode/2_2_x/ViennaRNA-"
+              (uri (string-append "https://github.com/ViennaRNA/ViennaRNA"
+                                  "/releases/download/v" version "/ViennaRNA-"
                                   version ".tar.gz"))
               (sha256
                (base32
-                "0mycxjqci462d1zmcdhhc47360np1xcrdf2f3yrhhzbn5blwiwwl"))))
+                "0z35d59hkc2ynb7rh6np2kbgx9ignasm09r7r0hlisivgknwyxmj"))))
     (build-system gnu-build-system)
     (arguments
      ;; Disable link-time optimization because this creates problems
@@ -580,8 +580,7 @@ including SNPS, microsatellites, RFLPs and AFLPs.")
              ;; Work around test failure.
              (setenv "PERL5LIB"
                      (string-append (getcwd) "/tests:"
-                                    (getenv "PERL5LIB")))
-             #t)))))
+                                    (getenv "PERL5LIB"))))))))
     (inputs
      `(("perl" ,perl)
        ("python" ,python)))
