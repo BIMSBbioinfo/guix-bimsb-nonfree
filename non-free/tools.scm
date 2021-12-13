@@ -58,8 +58,7 @@
                (for-each (lambda (file)
                            (install-file file bin))
                          '("iozone" "fileop" "pit_server"))
-               (install-file "../../docs/iozone.1" man1))
-             #t)))))
+               (install-file "../../docs/iozone.1" man1)))))))
     (home-page "http://www.iozone.org")
     (synopsis "Filesystem benchmark tool")
     (description "IOzone is a filesystem benchmark tool.  The benchmark
