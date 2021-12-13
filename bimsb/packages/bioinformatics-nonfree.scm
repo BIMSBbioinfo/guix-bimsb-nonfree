@@ -690,8 +690,7 @@ structural and functional information.")
         (revision "1"))
     (package
       (name "medicc")
-      (version (string-append "0.0.0-" revision "."
-                              (string-take commit 7)))
+      (version (git-version "0.0.0" revision commit))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -775,9 +774,7 @@ structural and functional information.")
                (uri (git-reference
                      (url "https://bitbucket.org/rfs/fstframework.git")
                      (commit commit)))
-               (file-name (string-append "fstframework-"
-                                         "0.0.0-" revision "."
-                                         (string-take commit 7)))
+               (file-name (git-version "0.0.0" revision commit))
                (sha256
                 (base32
                  "0s1483vz14fz1b7l8cs0hll70wn55dpfmdswmy7fqfq6w20q4lwl")))))))
@@ -1117,7 +1114,7 @@ preparation protocols.")
         (revision "1"))
     (package
       (name "python2-rnaseqlib")
-      (version (string-append "0.0.0-" revision "." (string-take commit 7)))
+      (version (git-version "0.0.0" revision commit))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
