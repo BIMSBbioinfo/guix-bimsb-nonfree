@@ -26,6 +26,7 @@
   #:use-module (guix download)
   #:use-module (guix hg-download)
   #:use-module (guix git-download)
+  #:use-module (guix gexp)
   #:use-module (guix utils)
   #:use-module (guix build-system cmake)
   #:use-module (guix build-system copy)
@@ -835,13 +836,12 @@ sequences greater than 1000 nt in length.")
     (arguments
      `(#:tests? #f ; no tests included
        #:make-flags
-       (let ((out (assoc-ref %outputs "out")))
-         (list (string-append "PREFIX=" out)
-               (string-append "BINDIR=" out "/bin")))
+       ,#~(list (string-append "PREFIX=" #$output)
+                (string-append "BINDIR=" #$output "/bin"))
        #:phases
        (modify-phases %standard-phases
          (add-after 'unpack 'enter-dir
-           (lambda _ (chdir "extensions") #t))
+           (lambda _ (chdir "extensions")))
          (delete 'configure))))
     (synopsis "Extensions for the MAFFT multiple sequence alignment package")
     (description
