@@ -128,36 +128,35 @@ OTHER-PERL instead of \"perl-\", when applicable."
                                     ,version ".tar.gz"))))
          (add-after 'unpack 'enter-dir (lambda _ (chdir "bcl2fastq/src") #t))
          (add-after 'enter-dir 'patch-stuff
-                    (lambda _
-                      ;; Update for boost 1.54 -> 1.56
-                      (substitute* "cxx/lib/io/Xml.cpp"
-                        (("xml_writer_make_settings\\(")
-                         "xml_writer_make_settings<ptree::key_type>("))
-                      (substitute* "cxx/include/common/Logger.hh"
-                        (("#include <ios>" m)
-                         (string-append "#include <iostream>\n" m)))
-                      ;; Do not use bundled libraries
-                      (substitute* "cmake/cxxConfigure.cmake"
-                        (("\"\\$\\{LIBEXSLT_LIBRARIES\\}\"")
-                         (string-append (assoc-ref %build-inputs "libxslt")
-                                        "/lib/libexslt.so"))
-                        (("find_library_redist\\(LIBXSLT .*")
-                         "bcl2fastq_find_library(LIBXSLT libxslt/xsltconfig.h xslt)\n")
-                        (("find_library_redist\\(LIBXML2 .*")
-                         "bcl2fastq_find_library(LIBXML2 libxml/xpath.h xml2)\n")
-                        (("find_library_redist\\(LIBEXSLT .*")
-                         "bcl2fastq_find_library(LIBEXSLT libexslt/exslt.h exslt)\n")
-                        (("redist_package") "#")
-                        (("^  +\"--prefix=.*") ""))
-                      ;; Work around broken version checking
-                      (substitute* "CMakeLists.txt"
-                        (("BCL2FASTQ_LIBXML2_VERSION 2.7.8")
-                         ,(string-append "BCL2FASTQ_LIBXML2_VERSION "
-                                         (package-version libxml2)))
-                        (("BCL2FASTQ_LIBXSLT_VERSION 1.1.26")
-                         ,(string-append "BCL2FASTQ_LIBXSLT_VERSION "
-                                         (package-version libxslt))))
-                      #t)))))
+           (lambda* (#:key inputs #:allow-other-keys)
+             ;; Update for boost 1.54 -> 1.56
+             (substitute* "cxx/lib/io/Xml.cpp"
+               (("xml_writer_make_settings\\(")
+                "xml_writer_make_settings<ptree::key_type>("))
+             (substitute* "cxx/include/common/Logger.hh"
+               (("#include <ios>" m)
+                (string-append "#include <iostream>\n" m)))
+             ;; Do not use bundled libraries
+             (substitute* "cmake/cxxConfigure.cmake"
+               (("\"\\$\\{LIBEXSLT_LIBRARIES\\}\"")
+                (string-append (assoc-ref inputs "libxslt")
+                               "/lib/libexslt.so"))
+               (("find_library_redist\\(LIBXSLT .*")
+                "bcl2fastq_find_library(LIBXSLT libxslt/xsltconfig.h xslt)\n")
+               (("find_library_redist\\(LIBXML2 .*")
+                "bcl2fastq_find_library(LIBXML2 libxml/xpath.h xml2)\n")
+               (("find_library_redist\\(LIBEXSLT .*")
+                "bcl2fastq_find_library(LIBEXSLT libexslt/exslt.h exslt)\n")
+               (("redist_package") "#")
+               (("^  +\"--prefix=.*") ""))
+             ;; Work around broken version checking
+             (substitute* "CMakeLists.txt"
+               (("BCL2FASTQ_LIBXML2_VERSION 2.7.8")
+                ,(string-append "BCL2FASTQ_LIBXML2_VERSION "
+                                (package-version libxml2)))
+               (("BCL2FASTQ_LIBXSLT_VERSION 1.1.26")
+                ,(string-append "BCL2FASTQ_LIBXSLT_VERSION "
+                                (package-version libxslt)))))))))
     (inputs
      `(("boost" ,boost-1.58)
        ("libxml2" ,libxml2)
