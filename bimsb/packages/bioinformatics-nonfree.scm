@@ -349,7 +349,7 @@ depths and differentiate reliable RDNPs from the background noise.")
         (revision "1"))
     (package
       (name "fstitch")
-      (version (string-append "0-" revision "." (string-take commit 9)))
+      (version (git-version "0" revision commit))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -639,8 +639,7 @@ sequences with a predefined structure (inverse folding) is provided.")
         (commit "a3da753118db8310d453669aa01d34a270532a4b"))
     (package
       (name "nofold")
-      (version (string-append "0.0.0-"
-                              revision "." (string-take commit 9)))
+      (version (git-version "0.0.0" revision commit))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
@@ -1006,7 +1005,7 @@ requires the author's consent."))))
         (revision "1"))
     (package
       (name "music")
-      (version (string-append "0.0.0-" revision "." (string-take commit 9)))
+      (version (git-version "0.0.0" revision commit))
       (source (origin
                 (method git-fetch)
                 (uri (git-reference
