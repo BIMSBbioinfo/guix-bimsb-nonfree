@@ -252,22 +252,21 @@ libraries for NVIDIA GPUs, all of which are proprietary.")
     (source #f)
     (build-system trivial-build-system)
     (arguments
-     '(#:modules ((guix build utils))
-       #:builder (begin
-                   (use-modules (guix build utils))
+     `(#:modules ((guix build utils))
+       #:builder
+       ,#~(begin
+            (use-modules (guix build utils))
 
-                   (let* ((header "/include/bits/floatn.h")
-                          (out    (assoc-ref %outputs "out"))
-                          (target (string-append out (dirname header)))
-                          (libc   (assoc-ref %build-inputs "libc")))
-                     (mkdir-p target)
-                     (install-file (string-append libc header) target)
-                     (substitute* (string-append target "/" (basename header))
-                       (("#([[:blank:]]*)define __HAVE_FLOAT128[[:blank:]]+1"
-                         _ space)
-                        (string-append "#" space
-                                       "define __HAVE_FLOAT128 0")))
-                     #t))))
+            (let* ((header "/include/bits/floatn.h")
+                   (target (string-append #$output (dirname header)))
+                   (libc   #$(this-package-input "libc")))
+              (mkdir-p target)
+              (install-file (string-append libc header) target)
+              (substitute* (string-append target "/" (basename header))
+                (("#([[:blank:]]*)define __HAVE_FLOAT128[[:blank:]]+1"
+                  _ space)
+                 (string-append "#" space
+                                "define __HAVE_FLOAT128 0")))))))
     (inputs `(("libc" ,glibc)))
     (synopsis "@file{<bits/floatn.h>} header that disables float128 support")
     (description
