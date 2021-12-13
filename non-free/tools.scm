@@ -29,7 +29,7 @@
 (define-public iozone
   (package
     (name "iozone")
-    (version "3.482")
+    (version "3.492")
     (source (origin
               (method url-fetch)
               (uri (string-append "http://www.iozone.org/src/current/"
@@ -40,7 +40,7 @@
                                   ".tar"))
               (sha256
                (base32
-                "0c5fyfr3iqfb8my7dcjlhm6kkmcl4a7r6gcgqrvp3xwn7jvgwcr7"))))
+                "16xvb2piprs2azkm9s9pijaqsnbdj2r84avpajgx6azkd3hq2a9j"))))
     (build-system gnu-build-system)
     (arguments
      `(#:make-flags (list "linux" "CC=gcc")
