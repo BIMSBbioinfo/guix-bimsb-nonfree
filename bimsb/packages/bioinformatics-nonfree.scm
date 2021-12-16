@@ -872,13 +872,13 @@ MXSCARNA and ProbConsRNA.")
     (arguments
      `(#:tests? #f ; no check target
        #:make-flags
-       (list "ZLIB=-lz"
-             (string-append "BAMTOOLSSRC="
-                            (assoc-ref %build-inputs "bamtools")
-                            "/lib/bamtools/libbamtools.a")
-             (string-append "BAMTOOLSDIR="
-                            (assoc-ref %build-inputs "bamtools")
-                            "/include/bamtools"))
+       ,#~(list "ZLIB=-lz"
+                (string-append "BAMTOOLSSRC="
+                               #$(this-package-input "bamtools")
+                               "/lib/bamtools/libbamtools.a")
+                (string-append "BAMTOOLSDIR="
+                               #$(this-package-input "bamtools")
+                               "/include/bamtools"))
        #:phases
        (modify-phases %standard-phases
          (delete 'configure)
