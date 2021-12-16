@@ -1197,7 +1197,7 @@ available for the 7 continuous distributions.")
     (arguments
      `(#:tests? #f ; no test target
        #:make-flags
-       (list (string-append "GSLPREFIX=" (assoc-ref %build-inputs "gsl")))
+       ,#~(list (string-append "GSLPREFIX=" #$(this-package-input "gsl")))
        #:phases
        (modify-phases %standard-phases
          (replace 'configure
