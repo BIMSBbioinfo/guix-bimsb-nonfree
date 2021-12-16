@@ -899,8 +899,7 @@ MXSCARNA and ProbConsRNA.")
                 "#include <samtools/faidx.h>"))
              (substitute* "bamfastq.cpp"
                (("#include \"BamReader.h\"")
-                "#include <bamtools/api/BamReader.h>"))
-             #t))
+                "#include <bamtools/api/BamReader.h>"))))
          (replace 'install
            (lambda* (#:key outputs #:allow-other-keys)
              (let* ((out (assoc-ref outputs "out"))
@@ -916,8 +915,7 @@ MXSCARNA and ProbConsRNA.")
                   "localalign"
                   "splitseq"
                   "matealign"
-                  "bamfastq")))
-             #t)))))
+                  "bamfastq"))))))))
     (inputs
      `(("zlib" ,zlib)
        ("boost" ,boost)
