@@ -23,17 +23,14 @@ feel free to contact us via email.
 
 # How to use
 
-GNU Guix respects the `GUIX_PACKAGE_PATH` environment variable and
-will prefer packages specified in the directories listed in this
-variable over those that come with GNU Guix.
+See [Specifying Additional
+Channels](https://guix.gnu.org/manual/en/guix.html#Specifying-Additional-Channels)
+in the Guix manual for instructions on how to add it to your installation
+or simply add the following snippet to your `channels.scm`:
 
-Here is an example of how to install a package defined in this
-project, assuming that the contents of this repository are located in
-`~/code/guix-bimsb-nonfree`:
-
-    export GUIX_PACKAGE_PATH="~/code/guix-bimsb-nonfree"
-    guix package -i dinup
-
+(channel
+  (name 'guix-bimsb-nonfree)
+  (url "https://github.com/BIMSBbioinfo/guix-bimsb-nonfree"))
 
 # On Free Software
 
