@@ -1055,11 +1055,11 @@ experiments.")
       (build-system gnu-build-system)
       (arguments
        `(#:make-flags
-         (list
-          ;; Cufflinks must be linked with various boost libraries.
-          (string-append "BOOST_LDFLAGS=-L"
-                         (assoc-ref %build-inputs "boost")
-                         "/lib"))
+         ,#~(list
+             ;; Cufflinks must be linked with various boost libraries.
+             (string-append "BOOST_LDFLAGS=-L"
+                            #$(this-package-input "boost")
+                            "/lib"))
          #:phases
          (modify-phases %standard-phases
            (add-after 'unpack 'fix-library-detection
@@ -1072,25 +1072,26 @@ experiments.")
                  (("ac_eigen_path/include")
                   "ac_eigen_path/include/eigen3")))))
          #:configure-flags
-         (cons* (string-append "--with-bam="
-                               (assoc-ref %build-inputs "htslib"))
-                (string-append "--with-eigen="
-                               (assoc-ref %build-inputs "eigen"))
-                (map (lambda (lib)
-                       (string-append "--with-boost-" lib "=boost_" lib))
-                     '("system"
-                       "filesystem"
-                       "serialization"
-                       "thread")))))
+         ,#~(cons* (string-append "--with-bam="
+                                  #$(this-package-input "htslib"))
+                   (string-append "--with-eigen="
+                                  #$(this-package-input "eigen"))
+                   (map (lambda (lib)
+                          (string-append "--with-boost-" lib "=boost_" lib))
+                        '("system"
+                          "filesystem"
+                          "serialization"
+                          "thread")))))
       (inputs
        `(("eigen" ,eigen)
          ("htslib" ,htslib)
-         ("boost" ,boost)
+         ("boost" ,boost-1.68)       ;latest boost doesn't allow c++03
          ("python" ,python-2)
          ("zlib" ,zlib)))
       (native-inputs
        `(("autoconf" ,autoconf)
-         ("automake" ,automake)))
+         ("automake" ,automake)
+         ("gcc" ,gcc-7)))
       (home-page "http://cole-trapnell-lab.github.io/cufflinks/")
       (synopsis "Transcriptome assembly and RNA-Seq expression analysis")
       (description
