@@ -1205,8 +1205,7 @@ available for the 7 continuous distributions.")
              (substitute* "Makefile"
                (("cp sylamer \\$\\(HOME\\)/local/bin")
                 (string-append "install -D -t " (assoc-ref outputs "out")
-                               "/bin sylamer")))
-             #t)))))
+                               "/bin sylamer"))))))))
     (inputs
      `(("gsl" ,gsl)
        ("zlib" ,zlib)))
