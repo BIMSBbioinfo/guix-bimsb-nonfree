@@ -883,7 +883,7 @@ MXSCARNA and ProbConsRNA.")
        (modify-phases %standard-phases
          (delete 'configure)
          (add-after 'unpack 'chdir
-           (lambda _ (chdir "tools") #t))
+           (lambda _ (chdir "tools")))
          (add-after 'chdir 'do-not-use-bundled-libraries
            (lambda* (#:key inputs #:allow-other-keys)
              (substitute* "makefile"
