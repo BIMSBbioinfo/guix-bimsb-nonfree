@@ -1394,6 +1394,31 @@ and clustering) is an R package to infer Gene Regulatory Networks and
 cell types from single-cell RNA-seq data.")
       (license (nonfree:non-free "Non-commercial")))))
 
+(define-public r-akima
+  (package
+    (name "r-akima")
+    (version "0.6-2.3")
+    (source
+     (origin
+       (method url-fetch)
+       (uri (cran-uri "akima" version))
+       (sha256
+        (base32 "0hvaa2n1r82fd60ksx4n4ia02fbm67fqdijfy2b2xywq8861i6rv"))))
+    (properties `((upstream-name . "akima")))
+    (build-system r-build-system)
+    (propagated-inputs (list r-sp))
+    (native-inputs (list gfortran))
+    (home-page "https://cran.r-project.org/package=akima")
+    (synopsis "Interpolation of irregularly and regularly spaced data")
+    (description
+     "This package provides several cubic spline interpolation methods of H.
+Akima for irregular and regular gridded data are available through this
+package, both for the bivariate case and univariate case.  Linear
+interpolation of irregular gridded data is also covered.  A bilinear
+interpolator for regular grids was also added for comparison with the bicubic
+interpolator on regular grids.")
+    (license (nonfree:non-free "Non-commercial, ACM"))))
+
 (define-public cermit
   (package
     (name "cermit")
