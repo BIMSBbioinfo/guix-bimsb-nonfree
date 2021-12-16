@@ -236,11 +236,11 @@ to write a free software alternative rather than using this tool."))))
                   (delete-file "redist/cmake-2.8.4.tar.gz")))))
     (arguments
      `(#:configure-flags
-       (list (string-append "-DBOOST_ROOT="
-			    (assoc-ref %build-inputs "boost"))
-	     "-DBoost_DEBUG=ON"
-	     ;; Needed for later versions of CMake with older versions of Boost
-	     "-DBoost_NO_BOOST_CMAKE=ON")
+       ,#~(list (string-append "-DBOOST_ROOT="
+			                   #$(this-package-input "boost"))
+	            "-DBoost_DEBUG=ON"
+	            ;; Needed for later versions of CMake with older versions of Boost
+	            "-DBoost_NO_BOOST_CMAKE=ON")
        #:phases
        (modify-phases %standard-phases
          (add-after 'set-paths 'hide-default-gcc
