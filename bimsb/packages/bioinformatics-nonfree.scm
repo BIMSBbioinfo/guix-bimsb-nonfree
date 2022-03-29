@@ -1359,12 +1359,13 @@ and modify loom files.  loomR aims to be completely compatible with loompy.")
       ;; should consider it licensed under the non-free DBAD license.
       (license (nonfree:non-free "https://dbad-license.org")))))
 
+;; The latest release is from 2019 and still at version 1.1.2.
 (define-public r-scenic
-  (let ((commit "3b05750598ce69ae0a128f2da9a8556b4193eea8")
+  (let ((commit "0585e873d7f17d35e7172f6f3e7e369f9820ef14")
         (revision "1"))
     (package
       (name "r-scenic")
-      (version (git-version "1.1.2-2" revision commit))
+      (version (git-version "1.2.4" revision commit))
       (source
        (origin
          (method git-fetch)
@@ -1374,7 +1375,7 @@ and modify loom files.  loomR aims to be completely compatible with loompy.")
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "15s602q6i5sdr8yjy7jh6f130gajzcc5hcvd0fdkgplcn35sp16f"))))
+           "0zkwffx40wxkv0zg8lnzr6m4j8zjkjs26dgbq1pzvnaxj5j6gbnl"))))
       (properties `((upstream-name . "SCENIC")))
       (build-system r-build-system)
       (propagated-inputs
