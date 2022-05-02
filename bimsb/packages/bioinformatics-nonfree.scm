@@ -962,10 +962,8 @@ not the pipeline scripts.")
                                        "/bin")))
                (copy-recursively "/tmp/bin" bin))
              #t)))))
-    (native-inputs
-     `(("unzip" ,unzip)))
-    (inputs
-     `(("libpng" ,libpng)))
+    (native-inputs (list unzip))
+    (inputs (list libpng))
     (home-page "http://genome.ucsc.edu")
     (synopsis "Pairwise sequence alignment algorithm")
     (description "BLAT is a pairwise sequence alignment algorithm
