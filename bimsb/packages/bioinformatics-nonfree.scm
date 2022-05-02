@@ -951,7 +951,8 @@ not the pipeline scripts.")
     (arguments
      `(#:tests? #f ; There is no test target
        #:make-flags (list "MACHTYPE=i386"
-                          "BINDIR=/tmp/bin")
+                          "BINDIR=/tmp/bin"
+                          "CFLAGS=-fcommon")
        #:phases
        (modify-phases %standard-phases
          (replace 'configure
