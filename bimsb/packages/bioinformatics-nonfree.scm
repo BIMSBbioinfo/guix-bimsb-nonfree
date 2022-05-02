@@ -955,13 +955,12 @@ not the pipeline scripts.")
        #:phases
        (modify-phases %standard-phases
          (replace 'configure
-           (lambda _ (mkdir-p "/tmp/bin") #t))
+           (lambda _ (mkdir-p "/tmp/bin")))
          (replace 'install
            (lambda* (#:key outputs #:allow-other-keys)
              (let ((bin (string-append (assoc-ref outputs "out")
                                        "/bin")))
-               (copy-recursively "/tmp/bin" bin))
-             #t)))))
+               (copy-recursively "/tmp/bin" bin)))))))
     (native-inputs (list unzip))
     (inputs (list libpng))
     (home-page "http://genome.ucsc.edu")
