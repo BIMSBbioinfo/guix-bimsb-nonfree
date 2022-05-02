@@ -65,8 +65,7 @@
              (rename-file "src" "buildroot/kent/src")
              (for-each make-file-writable
                        (find-files "buildroot" ".*"))
-             (chdir "buildroot")
-             #t))
+             (chdir "buildroot")))
          ;; By setting DESTDIR the binaries are built directly in the
          ;; target directory.  There is no separate installation step.
          (delete 'install))))
