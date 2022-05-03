@@ -35,20 +35,21 @@
 (define-public kentutils-nonfree
   (package
     (name "kentutils-nonfree")
-    (version "0")
+    (version "430")
     (source (origin
               (method git-fetch)
               (uri (git-reference
                     (url "git://genome-source.soe.ucsc.edu/kent.git")
-                    (commit "v379_base")))
+                    (commit (string-append "v" version "_base"))))
               (file-name (git-file-name name version))
               (sha256
                (base32
-                "0rsbrg4jii7jzf1hj4yyaa5y9yh4srvpcxrxf1mb87fxhrd29my2"))))
+                "1a9dz4xkb7gsdf644kfcpdj8wcqk2fl04hh7zkpw5z5ffgqwg50w"))))
     (build-system gnu-build-system)
     (arguments
      `(#:make-flags
        ,#~(list "CC=gcc"
+                "CFLAGS=-fcommon -DUCSC_CRAM=1 -DKNETFILE_HOOKS -mpopcnt"
                 (string-append "DESTDIR=" #$output)
                 (string-append "DOCUMENTROOT=" #$output "/share/kentutils/htdocs")
                 (string-append "SCRIPTS=" #$output "/share/kentutils/scripts")
@@ -66,6 +67,9 @@
              (for-each make-file-writable
                        (find-files "buildroot" ".*"))
              (chdir "buildroot")))
+         (add-before 'build 'build-libs
+           (lambda* (#:key make-flags #:allow-other-keys)
+             (apply invoke "make" "-C" "kent/src" "libs" make-flags)))
          ;; By setting DESTDIR the binaries are built directly in the
          ;; target directory.  There is no separate installation step.
          (delete 'install))))
