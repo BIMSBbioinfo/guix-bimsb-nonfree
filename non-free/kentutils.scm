@@ -70,12 +70,12 @@
          ;; target directory.  There is no separate installation step.
          (delete 'install))))
     (inputs
-     `(("openssl" ,openssl)
-       ("libpng" ,libpng)
-       ("libuuid" ,util-linux)
-       ("mysql" ,mysql)))
+     (list openssl
+           libpng
+           (list util-linux "lib")
+           mysql))
     (native-inputs
-     `(("rsync" ,rsync)))
+     (list rsync))
     (home-page "https://www.soe.ucsc.edu")
     (synopsis "UCSC genome browser bioinformatic utilities")
     (description "This package provides the command line
