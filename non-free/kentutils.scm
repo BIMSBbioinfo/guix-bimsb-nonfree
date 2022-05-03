@@ -1,5 +1,5 @@
-;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2019 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
+;;; GNU Guix --- Functional package management for GNU
+;;; Copyright © 2019, 2021, 2022 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
 ;;;
 ;;; This file is NOT part of GNU Guix, but is supposed to be used with GNU
 ;;; Guix and thus has the same license.
@@ -21,6 +21,7 @@
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module ((guix licenses-nonfree) #:prefix nonfree:)
   #:use-module (guix packages)
+  #:use-module (guix gexp)
   #:use-module (guix git-download)
   #:use-module (guix utils)
   #:use-module (guix build-system gnu)
@@ -47,12 +48,11 @@
     (build-system gnu-build-system)
     (arguments
      `(#:make-flags
-       (let ((out (assoc-ref %outputs "out")))
-         (list "CC=gcc"
-               (string-append "DESTDIR=" out)
-               (string-append "DOCUMENTROOT=" out "/share/kentutils/htdocs")
-               (string-append "SCRIPTS=" out "/share/kentutils/scripts")
-               (string-append "CGI_BIN=" out "/share/kentutils/cgi-bin")))
+       ,#~(list "CC=gcc"
+                (string-append "DESTDIR=" #$output)
+                (string-append "DOCUMENTROOT=" #$output "/share/kentutils/htdocs")
+                (string-append "SCRIPTS=" #$output "/share/kentutils/scripts")
+                (string-append "CGI_BIN=" #$output "/share/kentutils/cgi-bin"))
        #:tests? #f ; none included
        #:phases
        (modify-phases %standard-phases
