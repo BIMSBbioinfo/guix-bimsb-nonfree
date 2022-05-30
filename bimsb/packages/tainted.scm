@@ -26,6 +26,7 @@
   #:use-module (guix build-system cmake)
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system r)
+  #:use-module (guix utils)
   #:use-module (gnu packages)
   #:use-module (gnu packages autotools)
   #:use-module (gnu packages base)
@@ -37,13 +38,16 @@
   #:use-module (gnu packages cran)
   #:use-module (gnu packages documentation)
   #:use-module (gnu packages file)
+  #:use-module (gnu packages gtk)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages pkg-config)
+  #:use-module (gnu packages qt)
   #:use-module (gnu packages ruby)
   #:use-module (gnu packages statistics)
   #:use-module (bimsb packages staging)
   #:use-module (bimsb packages variants)
   #:use-module (bimsb packages bioinformatics-nonfree)
+  #:use-module (guix-science packages rstudio)
   #:use-module (bioconductor nonfree))
 
 ;; Tainted because of the dependency on the non-free Math::CDF.
@@ -468,3 +472,49 @@ and all possible secondary structures.")
        "RNAnue is a comprehensive analysis to detect RNA-RNA
 interactions from @dfn{Direct-Duplex-Detection} (DDD) data.")
       (license license:gpl3+))))
+
+(define-public rstudio
+  (package (inherit rstudio-server)
+    (name "rstudio")
+    (version "2023.0")
+    (arguments
+     (substitute-keyword-arguments (package-arguments rstudio-server)
+       ((#:configure-flags flags)
+        '(list "-DRSTUDIO_TARGET=Desktop"
+               "-DCMAKE_BUILD_TYPE=Release"
+               "-DRSTUDIO_USE_SYSTEM_YAML_CPP=1"
+               "-DRSTUDIO_USE_SYSTEM_BOOST=1"
+               "-DRSTUDIO_USE_SYSTEM_SOCI=1"
+               ;; auto-detection seems to be broken with boost 1.72
+               "-DRSTUDIO_BOOST_SIGNALS_VERSION=2"
+               (string-append "-DQT_QMAKE_EXECUTABLE="
+                              (assoc-ref %build-inputs "qtbase")
+                              "/bin/qmake")))
+       ((#:phases phases)
+        `(modify-phases ,phases
+           (add-after 'install 'wrap-program
+             (lambda* (#:key inputs outputs #:allow-other-keys)
+               (let* ((out (assoc-ref outputs "out"))
+                      (bin (string-append out "/bin"))
+                      (qtwebengine-path (string-append
+                                         (assoc-ref inputs "qtwebengine")
+                                         "/lib/qt5/libexec/QtWebEngineProcess")))
+                 (wrap-program (string-append bin "/rstudio")
+                   `("QTWEBENGINEPROCESS_PATH" ":" = (,qtwebengine-path))
+
+                   ;; For GtkFileChooserDialog.
+                   `("GSETTINGS_SCHEMA_DIR" = (,(string-append (assoc-ref inputs "gtk+")
+                                  "/share/glib-2.0/schemas")))))
+               #t))))))
+    (inputs
+     `(("gtk+" ,gtk+)
+       ("qtbase" ,qtbase-5)
+       ("qtdeclarative" ,qtdeclarative)
+       ("qtlocation" ,qtlocation)
+       ("qtsvg" ,qtsvg)
+       ("qtsensors" ,qtsensors)
+       ("qtxmlpatterns" ,qtxmlpatterns)
+       ("qtwebchannel" ,qtwebchannel)
+       ("qtwebengine" ,qtwebengine)
+       ,@(package-inputs rstudio-server)))
+    (synopsis "Integrated development environment (IDE) for R (desktop version)")))
