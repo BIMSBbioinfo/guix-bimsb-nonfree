@@ -1029,47 +1029,6 @@ available for the 7 continuous distributions.")
 (define-public perl5.24-math-cdf
   (package-for-other-perl perl-5.24 perl-math-cdf))
 
-(define-public sylamer
-  (package
-    (name "sylamer")
-    (version "12-342")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append "http://wwwdev.ebi.ac.uk/enright-dev/sylamer/"
-                                  "sylamer-" version ".tgz"))
-              (sha256
-               (base32
-                "0g82x2drm24nfzlvbahwy6vsbnqyy2qbrb7nsm82ja8zaim3mc7f"))))
-    (build-system gnu-build-system)
-    (arguments
-     `(#:tests? #f ; no test target
-       #:make-flags
-       ,#~(list (string-append "GSLPREFIX=" #$(this-package-input "gsl")))
-       #:phases
-       (modify-phases %standard-phases
-         (replace 'configure
-           (lambda* (#:key outputs #:allow-other-keys)
-             (substitute* "Makefile"
-               (("cp sylamer \\$\\(HOME\\)/local/bin")
-                (string-append "install -D -t " (assoc-ref outputs "out")
-                               "/bin sylamer"))))))))
-    (inputs
-     `(("gsl" ,gsl)
-       ("zlib" ,zlib)))
-    (home-page "https://www.ebi.ac.uk/research/enright/software/sylamer")
-    (synopsis "Asses microRNA binding and siRNA off-target effects")
-    (description "Sylamer is a system for finding significantly over or
-under-represented words in sequences according to a sorted gene list.
-Typically it is used to find significant enrichment or depletion of microRNA
-or siRNA seed sequences from microarray expression data.  Sylamer is extremely
-fast and can be applied to genome-wide datasets with ease.  Results are
-plotted in terms of a significance landscape plot.  These plots show
-significance profiles for each word studied across the sorted genelist.")
-    ;; Contacted the authors; they said it will be GPL with the next
-    ;; release.  They will also move to Github.  That was in 2018 but
-    ;; nothing happened since.
-    (license nonfree:undeclared)))
-
 (define-public rsat
   (package
     (name "rsat")
