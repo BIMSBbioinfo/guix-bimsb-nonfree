@@ -63,28 +63,6 @@ frequency matrices from 14 public sources, for multiple organisms.")
     (license (nonfree:non-free
               "https://bioconductor.org/packages/release/bioc/licenses/MotifDb/LICENSE"))))
 
-(define-public r-minet
-  (package
-    (name "r-minet")
-    (version "3.38.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "minet" version))
-       (sha256
-        (base32
-         "14vyl2f27ydffz7y7yqg5rja5rv2zrzadfm23wp2633qisw56rpr"))))
-    (build-system r-build-system)
-    (propagated-inputs
-     `(("r-infotheo" ,r-infotheo)))
-    (home-page "http://minet.meyerp.com")
-    (synopsis "Mutual information networks")
-    (description
-     "This package implements various algorithms for inferring mutual
-information networks (such as gene networks) from data (using mutual
-information). In particular, the package implements MRNET.")
-    (license (nonfree:non-free "CC-BY-NC-SA"))))
-
 (define-public r-rankprod
   (package
     (name "r-rankprod")
