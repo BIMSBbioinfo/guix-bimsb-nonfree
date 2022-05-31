@@ -88,25 +88,21 @@ information). In particular, the package implements MRNET.")
 (define-public r-rankprod
   (package
     (name "r-rankprod")
-    (version "3.10.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (bioconductor-uri "RankProd" version))
-       (sha256
-        (base32
-         "0530izdfqishc6jjnj0ac5pcvsdh1z646imwy8b1s95vgnq5qg8q"))))
+    (version "3.22.0")
+    (source (origin
+              (method url-fetch)
+              (uri (bioconductor-uri "RankProd" version))
+              (sha256
+               (base32
+                "0rq14h9kjj84krgvfa09jbc5s8yks37fjbcv8z88daaib0j3fq2d"))))
     (properties `((upstream-name . "RankProd")))
     (build-system r-build-system)
-    (propagated-inputs
-     `(("r-gmp" ,r-gmp)
-       ("r-rmpfr" ,r-rmpfr)))
-    (home-page "https://bioconductor.org/packages/RankProd/")
+    (propagated-inputs (list r-gmp r-rmpfr))
+    (home-page "https://bioconductor.org/packages/RankProd")
     (synopsis "Identify differentially expressed genes")
     (description
-     "This package implements a non-parametric method for identifying
-differentially expressed (up- or down- regulated) genes based on the estimated
-percentage of false predictions (pfp).  The method can combine data sets from
-different origins (meta-analysis) to increase the power of the
-identification.")
+     "Non-parametric method for identifying differentially expressed (up- or down-
+regulated) genes based on the estimated percentage of false predictions (pfp).
+The method can combine data sets from different origins (meta-analysis) to
+increase the power of the identification.")
     (license (nonfree:non-free "Non-commercial"))))
