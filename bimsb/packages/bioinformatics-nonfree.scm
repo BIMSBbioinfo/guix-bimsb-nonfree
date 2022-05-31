@@ -71,7 +71,8 @@
   #:use-module (gnu packages xml)
   #:use-module (bimsb packages staging)
   #:use-module (bimsb packages tainted)
-  #:use-module (bimsb packages variants))
+  #:use-module (bimsb packages variants)
+  #:use-module (guix-science-nonfree packages bioinformatics))
 
 (define (other-perl-package-name other-perl)
   "Return a procedure that returns NAME with a new prefix for
@@ -553,55 +554,6 @@ including SNPS, microsatellites, RFLPs and AFLPs.")
     ;; I have asked upstream for information about the license:
     ;; https://groups.google.com/forum/#!topic/structure-software/1g7bDoN9140
     (license nonfree:undeclared)))
-
-(define-public viennarna
-  (package
-    (name "viennarna")
-    (version "2.4.18")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append "https://github.com/ViennaRNA/ViennaRNA"
-                                  "/releases/download/v" version "/ViennaRNA-"
-                                  version ".tar.gz"))
-              (sha256
-               (base32
-                "0z35d59hkc2ynb7rh6np2kbgx9ignasm09r7r0hlisivgknwyxmj"))))
-    (build-system gnu-build-system)
-    (arguments
-     ;; Disable link-time optimization because this creates problems
-     ;; when stripping.  Linking with the stripped static library
-     ;; would fail when LTO is enabled.  See the discussion here:
-     ;; https://github.com/s-will/LocARNA/issues/7
-     `(#:configure-flags '("--disable-lto")
-       #:phases
-       (modify-phases %standard-phases
-         (add-before 'check 'set-search-path
-           (lambda _
-             ;; Work around test failure.
-             (setenv "PERL5LIB"
-                     (string-append (getcwd) "/tests:"
-                                    (getenv "PERL5LIB"))))))))
-    (inputs
-     `(("perl" ,perl)
-       ("python" ,python)))
-    (native-inputs
-     `(("swig" ,swig)))
-    (home-page "http://www.tbi.univie.ac.at/RNA/index.html")
-    (synopsis "Prediction and comparison of RNA secondary structures")
-    (description
-     "RNA secondary structure prediction through energy minimization is the
-most used function in the package.  Three kinds of dynamic programming
-algorithms for structure prediction are provided: the minimum free energy
-algorithm of Zuker & Stiegler (1981) which yields a single optimal structure,
-the partition function algorithm of McCaskill (1990) which calculates base
-pair probabilities in the thermodynamic ensemble, and the suboptimal folding
-algorithm of Wuchty et.al (1999) which generates all suboptimal structures
-within a given energy range of the optimal energy.  For secondary structure
-comparison, the package contains several measures of
-distance (dissimilarities) using either string alignment or
-tree-editing (Shapiro & Zhang 1990).  Finally, an algorithm to design
-sequences with a predefined structure (inverse folding) is provided.")
-    (license (nonfree:non-free "TODO" "license forbids commercial usage"))))
 
 (define-public viennarna-2.2.8
   (package (inherit viennarna)
