@@ -567,25 +567,6 @@ including SNPS, microsatellites, RFLPs and AFLPs.")
                (base32
                 "0b9h3rrndxjvj3r2wyixf095fghpspgiwx3acbd8hlv3lj6hpi1h"))))))
 
-(define-public viennarna-1.8
-  (package (inherit viennarna)
-    (version "1.8.5")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "http://www.tbi.univie.ac.at/RNA/download/sourcecode/"
-                    "1_8_x/ViennaRNA-" version ".tar.gz"))
-              (sha256
-               (base32
-                "1ygcs399xl07igj15ynfg6cd9ifi1amy8n0p6bl6awgpx95xkqpl"))))
-    (arguments
-     `(#:tests? #f ; no tests
-       #:configure-flags
-       (list "--without-perl"
-	     "CFLAGS=-std=gnu89")))
-    (inputs '())
-    (native-inputs '())))
-
 (define-public nofold
   (let ((revision "1")
         (commit "a3da753118db8310d453669aa01d34a270532a4b"))
