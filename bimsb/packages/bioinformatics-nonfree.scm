@@ -998,46 +998,6 @@ preparation protocols.")
       (license (list license:boost1.0
                      (nonfree:non-free "Not to be used for benchmarks"))))))
 
-(define-public python2-rnaseqlib
-  (let ((commit "2e8fb07190175c54101d16364072d7372c07815b")
-        (revision "1"))
-    (package
-      (name "python2-rnaseqlib")
-      (version (string-append "0.0.0-" revision "." (string-take commit 7)))
-      (source (origin
-                (method git-fetch)
-                (uri (git-reference
-                      (url "https://github.com/yarden/rnaseqlib.git")
-                      (commit commit)))
-                (sha256
-                 (base32
-                  "1i7cj7c3k7hfx647dlpddnaf24pvia5k35f2fchmxy6bgppy0xky"))))
-      (build-system python-build-system)
-      (arguments
-       `(#:python ,python-2
-         #:phases
-         (modify-phases %standard-phases
-           (add-before 'reset-gzip-timestamps 'fix-permissions
-             (lambda* (#:key outputs #:allow-other-keys)
-               (map (lambda (file)
-                      (make-file-writable file))
-                    (find-files (assoc-ref outputs "out") ".*\\.gz$"))
-               #t)))))
-      (propagated-inputs
-       `(("python2-cutadapt" ,python2-cutadapt)
-         ("miso" ,miso)
-         ("python2-scipy" ,python2-scipy) ; FIXME: used by miso
-         ("python2-matplotlib" ,python2-matplotlib)
-         ("python2-numpy" ,python2-numpy)
-         ("python2-pandas" ,python2-pandas)
-         ("python2-pybedtools" ,python2-pybedtools)
-         ("python2-pysam" ,python2-pysam)))
-      (home-page "http://yarden.github.com/rnaseqlib")
-      (synopsis "RNA-Seq pipeline")
-      (description "RNAseqlib is a simple pipeline for RNA-Seq
-analysis.  It supports mRNA-Seq, Ribo-Seq, and CLIP-Seq analyses.")
-      (license nonfree:undeclared))))
-
 (define-public perl-math-cdf
   (package
     (name "perl-math-cdf")
