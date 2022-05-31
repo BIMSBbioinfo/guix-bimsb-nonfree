@@ -5,6 +5,9 @@
    (name guix-science)
    (url "https://github.com/guix-science/guix-science.git"))
   (channel
+   (name guix-science-nonfree)
+   (url "https://github.com/guix-science/guix-science-nonfree.git"))
+  (channel
    (name guix-bimsb)
    (url "https://github.com/BIMSBbioinfo/guix-bimsb"))
   (channel
