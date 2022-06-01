@@ -555,18 +555,6 @@ including SNPS, microsatellites, RFLPs and AFLPs.")
     ;; https://groups.google.com/forum/#!topic/structure-software/1g7bDoN9140
     (license nonfree:undeclared)))
 
-(define-public viennarna-2.2.8
-  (package (inherit viennarna)
-    (version "2.2.8")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "http://www.tbi.univie.ac.at/RNA/packages/source/ViennaRNA-"
-                    version ".tar.gz"))
-              (sha256
-               (base32
-                "0b9h3rrndxjvj3r2wyixf095fghpspgiwx3acbd8hlv3lj6hpi1h"))))))
-
 (define-public nofold
   (let ((revision "1")
         (commit "a3da753118db8310d453669aa01d34a270532a4b"))
