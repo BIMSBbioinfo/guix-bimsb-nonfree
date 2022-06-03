@@ -44,7 +44,8 @@
   #:use-module (bimsb packages staging)
   #:use-module (bimsb packages variants)
   #:use-module (bimsb packages bioinformatics-nonfree)
-  #:use-module (guix-science-nonfree packages bioconductor))
+  #:use-module (guix-science-nonfree packages bioconductor)
+  #:use-module (guix-science-nonfree packages bioinformatics))
 
 ;; Tainted because of the dependency on the non-free Math::CDF.
 (define-public mrin
