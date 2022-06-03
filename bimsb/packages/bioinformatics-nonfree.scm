@@ -1,5 +1,5 @@
 ;;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2015, 2016, 2017, 2018, 2019, 2020, 2021 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
+;;; Copyright © 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
 ;;; Copyright © 2017 CM Massimo <carlomaria.massimo@mdc-berlin.de>
 ;;; Copyright © 2018, 2019, 2021 Marcel Schilling <marcel.schilling@uni-luebeck.de>
 ;;;
@@ -63,6 +63,7 @@
   #:use-module (gnu packages python)
   #:use-module (gnu packages python-science)
   #:use-module (gnu packages python-xyz)
+  #:use-module (past packages python27)
   #:use-module (gnu packages ruby)
   #:use-module (gnu packages statistics)
   #:use-module (gnu packages swig)
@@ -311,10 +312,9 @@ to write a free software alternative rather than using this tool."))))
            (lambda* (#:key source #:allow-other-keys)
              (mkdir "dinup")
              (invoke "tar" "-C" "dinup" "-xvf" source)
-             (chdir "dinup")
-             #t)))))
+             (chdir "dinup"))))))
     (native-inputs
-     `(("python-setuptools" ,python2-setuptools)))
+     (list python2-setuptools))
     (home-page "http://zhanglab.tongji.edu.cn/softwares/DiNuP/")
     (synopsis "Identify regions of differential nucleosome positioning")
     (description
