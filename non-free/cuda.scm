@@ -115,7 +115,7 @@
        ("perl" ,perl)
        ("python" ,python-2)))
     (inputs
-     `(("gcc:lib" ,gcc "lib")))
+     `(("gcc:lib" ,gcc-8 "lib")))
     (synopsis
      "Compiler for the CUDA language and associated run-time support")
     (description
