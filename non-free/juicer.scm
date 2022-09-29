@@ -139,17 +139,16 @@ genomes.")
                              (which "bash")
                              (which "bash")
                              share)))
-                 (chmod (string-append bin "/juicer") #o555)
-                 #t))))))
+                 (chmod (string-append bin "/juicer") #o555)))))))
       (inputs
-       `(("bash" ,bash)
-         ("java-juicebox" ,java-juicebox)
-         ("java" ,icedtea)
-         ("perl" ,perl)))
+       (list bash
+             java-juicebox
+             icedtea-8
+             perl))
       (propagated-inputs
-       `(("bwa" ,bwa)
-         ("coreutils" ,coreutils)
-         ("gawk" ,gawk)))
+       (list bwa
+             coreutils
+             gawk))
       (home-page "https://github.com/aidenlab/Juicebox")
       (synopsis "Visualization and analysis software for Hi-C data")
       (description "Juicebox is visualization software for Hi-C data.
