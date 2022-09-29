@@ -20,6 +20,7 @@
 (define-module (non-free juicer)
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages)
+  #:use-module (guix gexp)
   #:use-module (guix git-download)
   #:use-module (guix utils)
   #:use-module (guix build-system ant)
@@ -51,14 +52,19 @@
                 "00nz7g9raj1nwdd6vcpq85kc88p7d4266knglf80sc8kjbwpv120"))))
     (build-system ant-build-system)
     (arguments
-     `(#:build-target "build.all.artifacts"
-       #:tests? #f ; there are no tests
-       #:make-flags
-       (list (string-append "-Djdk.home.1.8=" (assoc-ref %build-inputs "jdk")))
-       #:phases
-       (modify-phases %standard-phases
+     (list
+      #:jdk icedtea-8
+      #:build-target "build.all.artifacts"
+      #:tests? #f ; there are no tests
+      #:make-flags
+      #~(list (string-append "-Djdk.home.1.8="
+                             (ungexp (this-package-native-input "jdk") "jdk")))
+      #:phases
+      '(modify-phases %standard-phases
          (replace 'install
            (install-jars "out/artifacts/")))))
+    (native-inputs
+     `(("jdk" ,icedtea-8 "jdk")))
     (home-page "https://github.com/aidenlab/Juicebox")
     (synopsis "Visualization and analysis software for Hi-C data")
     (description "Juicebox is visualization software for Hi-C data.
