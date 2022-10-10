@@ -122,7 +122,7 @@
      "This package provides the CUDA compiler and the CUDA run-time support
 libraries for NVIDIA GPUs, all of which are proprietary.")
     (home-page "https://developer.nvidia.com/cuda-toolkit")
-    (license #f)
+    (nonfree:non-free "https://developer.nvidia.com/nvidia-cuda-license")
     (supported-systems '("x86_64-linux"))))
 
 (define-syntax-rule (cuda-source url hash)
