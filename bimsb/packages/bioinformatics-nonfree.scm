@@ -768,18 +768,17 @@ requires the author's consent."))))
                   "1in3s6qimbx5s10sxx943krj52702s2f7yk9nfr54z5yirwqrf36"))))
       (build-system gnu-build-system)
       (arguments
-       `(#:tests? #f          ; no "check" target
-         #:phases
-         (modify-phases %standard-phases
-           (delete 'configure)
-           ;; There is no "install" target.
-           (replace 'install
-             (lambda* (#:key outputs #:allow-other-keys)
-               (let ((bin (string-append (assoc-ref outputs "out")
-                                         "/bin")))
-                 (mkdir-p bin)
-                 (install-file "bin/MUSIC" bin))
-               #t)))))
+       (list
+        #:tests? #f                     ; no "check" target
+        #:phases
+        #~(modify-phases %standard-phases
+            (delete 'configure)
+            ;; There is no "install" target.
+            (replace 'install
+              (lambda _
+                (let ((bin (string-append #$output "/bin")))
+                  (mkdir-p bin)
+                  (install-file "bin/MUSIC" bin)))))))
       (home-page "http://music.gersteinlab.org")
       (synopsis "Multiscale enrichment calling for ChIP-Seq datasets")
       (description
