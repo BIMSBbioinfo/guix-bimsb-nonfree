@@ -672,10 +672,10 @@ structural and functional information.")
                   "matealign"
                   "bamfastq"))))))))
     (inputs
-     `(("zlib" ,zlib)
-       ("boost" ,boost)
-       ("bamtools" ,bamtools-2.0)
-       ("samtools" ,samtools-0)))
+     (list zlib
+           boost
+           bamtools-2.0
+           samtools-0.1))
     (home-page "https://bitbucket.org/dranew/defuse")
     (synopsis "Gene fusion discovery using RNA-Seq data")
     (description "deFuse is a software package for gene fusion
