@@ -807,34 +807,35 @@ experiments.")
                   "1mgmakzg4g174ry0idyzjwysssb5ak72ybk0qha8vi6raylhd3if"))))
       (build-system gnu-build-system)
       (arguments
-       `(#:make-flags
-         ,#~(list
-             ;; Cufflinks must be linked with various boost libraries.
-             (string-append "BOOST_LDFLAGS=-L"
-                            #$(this-package-input "boost")
-                            "/lib"))
+       (list
+        #:make-flags
+        #~(list
+           ;; Cufflinks must be linked with various boost libraries.
+           (string-append "BOOST_LDFLAGS=-L"
+                          #$(this-package-input "boost")
+                          "/lib"))
          #:phases
-         (modify-phases %standard-phases
-           (add-after 'unpack 'fix-library-detection
-             (lambda _
-               (substitute* "ax_boost_system.m4"
-                 (("BOOSTLIBDIR/boost_system")
-                  "BOOSTLIBDIR/libboost_system"))
-               ;; The includes for "eigen" are located in a subdirectory.
-               (substitute* "ax_check_eigen.m4"
-                 (("ac_eigen_path/include")
-                  "ac_eigen_path/include/eigen3")))))
+         '(modify-phases %standard-phases
+            (add-after 'unpack 'fix-library-detection
+              (lambda _
+                (substitute* "ax_boost_system.m4"
+                  (("BOOSTLIBDIR/boost_system")
+                   "BOOSTLIBDIR/libboost_system"))
+                ;; The includes for "eigen" are located in a subdirectory.
+                (substitute* "ax_check_eigen.m4"
+                  (("ac_eigen_path/include")
+                   "ac_eigen_path/include/eigen3")))))
          #:configure-flags
-         ,#~(cons* (string-append "--with-bam="
-                                  #$(this-package-input "htslib"))
-                   (string-append "--with-eigen="
-                                  #$(this-package-input "eigen"))
-                   (map (lambda (lib)
-                          (string-append "--with-boost-" lib "=boost_" lib))
-                        '("system"
-                          "filesystem"
-                          "serialization"
-                          "thread")))))
+         #~(cons* (string-append "--with-bam="
+                                 #$(this-package-input "htslib"))
+                  (string-append "--with-eigen="
+                                 #$(this-package-input "eigen"))
+                  (map (lambda (lib)
+                         (string-append "--with-boost-" lib "=boost_" lib))
+                       '("system"
+                         "filesystem"
+                         "serialization"
+                         "thread")))))
       (inputs
        (list eigen
              htslib
