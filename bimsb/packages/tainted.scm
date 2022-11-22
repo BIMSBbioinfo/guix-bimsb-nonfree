@@ -437,9 +437,10 @@ and all possible secondary structures.")
 
 ;; This software is released under the GPL but depends on the non-free
 ;; ViennaRNA, so we cannot add it to Guix upstream.
+;; Currently fails to build: https://github.com/Ibvt/RNAnue/issues/13
 (define-public rnanue
-  (let ((commit "7fb7ab98d9d0f67fc61e5f0e728ad4b6da0833b1")
-        (revision "1"))
+  (let ((commit "f8696dd44c42b67d1d24a0b9f99618cd9fbe7841")
+        (revision "2"))
     (package
       (name "rnanue")
       (version (git-version "0.1.0" revision commit))
@@ -451,7 +452,7 @@ and all possible secondary structures.")
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "1kcab00xsgz1rd3shjsa8s23pqcpqzwqfagl8qvp6g9ddxz1d5ii"))
+                  "1gmvcyn9z2cj7qhnn783k7ns37rkh7bdrpgckqavv99s5a3ly3nw"))
                 (modules '((guix build utils)))
                 (snippet
                  '(delete-file-recursively "build"))))
