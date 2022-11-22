@@ -370,23 +370,21 @@ depths and differentiate reliable RDNPs from the background noise.")
                     #t))))
       (build-system gnu-build-system)
       (arguments
-       `(#:tests? #f ; no tests included
-         #:phases
-         (modify-phases %standard-phases
-           (add-after 'unpack 'enter-dir
-             (lambda _
-               (chdir "FastReadStitcher/src/")
-               (substitute* "Makefile"
-                 (("\\$\\{PWD\\}/") ""))
-               #t))
-           (delete 'configure)
-           (replace 'install
-             (lambda* (#:key outputs #:allow-other-keys)
-               (let ((bin (string-append (assoc-ref outputs "out")
-                                         "/bin")))
-                 (mkdir-p bin)
-                 (install-file "FStitch" bin)
-                 #t))))))
+       (list
+        #:tests? #f                     ; no tests included
+        #:phases
+        #~(modify-phases %standard-phases
+            (add-after 'unpack 'enter-dir
+              (lambda _
+                (chdir "FastReadStitcher/src/")
+                (substitute* "Makefile"
+                  (("\\$\\{PWD\\}/") ""))))
+            (delete 'configure)
+            (replace 'install
+              (lambda _
+                (let ((bin (string-append #$output "/bin")))
+                  (mkdir-p bin)
+                  (install-file "FStitch" bin)))))))
       (home-page "https://github.com/azofeifa/FStitch/")
       (synopsis "Detect nascent RNA transcription in GRO-seq and ChIP-seq")
       (description
