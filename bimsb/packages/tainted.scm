@@ -104,16 +104,16 @@
                   (wrap-program (string-append bin "/" (basename file))
                     `("R_LIBS_SITE" ":" prefix (,(getenv "R_LIBS_SITE")))))))))))
     (inputs
-     `(("coreutils" ,coreutils)
-       ("perl" ,perl)
-       ("perl-carp" ,perl-carp)
-       ("perl-czplib" ,perl-czplib)
-       ("perl-math-cdf" ,perl-math-cdf) ; non-free
-       ("perl-data-dumper" ,perl-data-dumper)
-       ("perl-getopt-long" ,perl-getopt-long)
-       ("gzip" ,gzip)
-       ("r" ,r-minimal)
-       ("r-getopt" ,r-getopt)))
+     (list coreutils
+           perl
+           perl-carp
+           perl-czplib
+           perl-math-cdf                ; non-free
+           perl-data-dumper
+           perl-getopt-long
+           gzip
+           r-minimal
+           r-getopt))
     (home-page "http://zhanglab.c2b2.columbia.edu/index.php/MRIN")
     (synopsis "Tool to obtain quantitative measure of mRNA integrity")
     (description
