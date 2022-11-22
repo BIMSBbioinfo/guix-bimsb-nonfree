@@ -351,76 +351,74 @@ for analyzing sets of related RNAs without known common structure.")
                 "11jfbqkyvk2agq7q9lvblqif299pwwc8lvn6d33jd9gy1hcrwzjr"))))
     (build-system gnu-build-system)
     (arguments
-     `(#:configure-flags
-       (list "BOOST_LIBS=-lboost_system")
-       #:make-flags
-       ;; This program was written for an older version of Boost.
-       '("CPPFLAGS=-DBOOST_SPIRIT_USE_OLD_NAMESPACE -fpermissive")
-       #:phases
-       (modify-phases %standard-phases
-         (add-after 'unpack 'patch-boost-includes
-           (lambda _
-             (substitute* '("src/similarity/common/fa.h"
-                            "src/similarity/common/fa.cpp"
-                            "src/similarity/common/maf.h"
-                            "src/similarity/common/maf.cpp"
-                            "src/similarity/common/aln.h"
-                            "src/similarity/common/aln.cpp"
-                            "src/similarity/bpla_kernel/data.h")
-               (("boost/spirit/")
-                "boost/spirit/home/classic/"))
-             (substitute* "src/similarity/bpla_kernel/main.cpp"
-               ((" _1")
-                " boost::lambda::_1"))
-             #t))
-         (add-after 'patch-boost-includes 'chdir
-           (lambda _ (chdir "src/similarity") #t))
-         (add-after 'install 'chdir-wpgma
-           (lambda _ (chdir "../../src/wpgma") #t))
-         (add-after 'chdir-wpgma 'configure-wpgma
-           (lambda* (#:key configure-flags
-                     #:allow-other-keys #:rest args)
-             (let* ((configure (assoc-ref %standard-phases 'configure)))
-               (apply configure
-                      (append args
-                              (list #:configure-flags
-                                    configure-flags))))))
-         (add-after 'configure-wpgma 'build-wpgma
-           (lambda* (#:key make-flags
-                     #:allow-other-keys #:rest args)
-             (let* ((build (assoc-ref %standard-phases 'build)))
-               (apply build
-                      (append args
-                              (list #:make-flags make-flags))))))
-         (add-after 'build-wpgma 'install-wpgma
-           (lambda* (#:key make-flags
-                     #:allow-other-keys #:rest args)
-             (let* ((install (assoc-ref %standard-phases 'install)))
-               (apply install
-                      (append args
-                              (list #:make-flags make-flags))))))
-         (add-after 'install-wpgma 'install-scripts
-           (lambda* (#:key outputs #:allow-other-keys)
-             (let* ((out (assoc-ref outputs "out"))
-                    (share (string-append out "/share/ensembleclust"))
-                    (bin (string-append out "/bin")))
-               (mkdir-p share)
-               (copy-recursively "../script" share)
-               (mkdir-p bin)
+     (list
+      #:configure-flags
+      '(list "BOOST_LIBS=-lboost_system")
+      #:make-flags
+      ;; This program was written for an older version of Boost.
+      '(list "CPPFLAGS=-DBOOST_SPIRIT_USE_OLD_NAMESPACE -fpermissive")
+      #:phases
+      #~(modify-phases %standard-phases
+          (add-after 'unpack 'patch-boost-includes
+            (lambda _
+              (substitute* '("src/similarity/common/fa.h"
+                             "src/similarity/common/fa.cpp"
+                             "src/similarity/common/maf.h"
+                             "src/similarity/common/maf.cpp"
+                             "src/similarity/common/aln.h"
+                             "src/similarity/common/aln.cpp"
+                             "src/similarity/bpla_kernel/data.h")
+                (("boost/spirit/")
+                 "boost/spirit/home/classic/"))
+              (substitute* "src/similarity/bpla_kernel/main.cpp"
+                ((" _1")
+                 " boost::lambda::_1"))))
+          (add-after 'patch-boost-includes 'chdir
+            (lambda _ (chdir "src/similarity")))
+          (add-after 'install 'chdir-wpgma
+            (lambda _ (chdir "../../src/wpgma")))
+          (add-after 'chdir-wpgma 'configure-wpgma
+            (lambda* (#:key configure-flags
+                      #:allow-other-keys #:rest args)
+              (let ((configure (assoc-ref %standard-phases 'configure)))
+                (apply configure
+                       (append args
+                           (list #:configure-flags
+                                 configure-flags))))))
+          (add-after 'configure-wpgma 'build-wpgma
+            (lambda* (#:key make-flags
+                      #:allow-other-keys #:rest args)
+              (let ((build (assoc-ref %standard-phases 'build)))
+                (apply build
+                       (append args
+                           (list #:make-flags make-flags))))))
+          (add-after 'build-wpgma 'install-wpgma
+            (lambda* (#:key make-flags
+                      #:allow-other-keys #:rest args)
+              (let ((install (assoc-ref %standard-phases 'install)))
+                (apply install
+                       (append args
+                           (list #:make-flags make-flags))))))
+          (add-after 'install-wpgma 'install-scripts
+            (lambda _
+              (let ((share (string-append #$output "/share/ensembleclust"))
+                    (bin (string-append #$output "/bin")))
+                (mkdir-p share)
+                (copy-recursively "../script" share)
+                (mkdir-p bin)
 
-               ;; Generate wrapper script.  We cannot use the script
-               ;; that comes with the sources because the paths are
-               ;; all wrong.
-               (call-with-output-file (string-append bin "/cluster")
-                 (lambda (port)
-                   (display (string-append
-                             "#!" (which "sh")
-                             bin "/bpla_kernel result/$3.mat +1 $1\n"
-                             share "/mat2dist.rb result/$3.mat > result/$3.dist\n"
-                             bin "/pgma $2 result/$3.dist > result/$3.tree\n")
-                            port)))
-               (chmod (string-append bin "/cluster") #o755)
-               #t))))))
+                ;; Generate wrapper script.  We cannot use the script
+                ;; that comes with the sources because the paths are
+                ;; all wrong.
+                (call-with-output-file (string-append bin "/cluster")
+                  (lambda (port)
+                    (display (string-append
+                              "#!" (which "sh")
+                              bin "/bpla_kernel result/$3.mat +1 $1\n"
+                              share "/mat2dist.rb result/$3.mat > result/$3.dist\n"
+                              bin "/pgma $2 result/$3.dist > result/$3.tree\n")
+                             port)))
+                (chmod (string-append bin "/cluster") #o755)))))))
     (inputs
      (list ruby
            boost-1.58
