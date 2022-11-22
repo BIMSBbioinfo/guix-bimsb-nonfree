@@ -741,8 +741,7 @@ the human genome sequence.")
     (build-system gnu-build-system)
     ;; FIXME: there are test failures, but I'm not sure why.
     (arguments '(#:tests? #f))
-    (inputs
-     `(("perl" ,perl)))
+    (inputs (list perl))
     (home-page "http://research-pub.gene.com/gmap/")
     (synopsis "Genomic mapper and aligner")
     (description "This package provides GMAP and GSNAP.  The former is
