@@ -473,21 +473,21 @@ a ChIP-seq peak caller.")
                            "uniprobe2meme"))
               #t))))))
     (inputs
-     `(("perl" ,perl)
-       ("perl-file-which" ,perl-file-which)
-       ("perl-html-parser" ,perl-html-parser)
-       ("perl-html-template" ,perl-html-template)
-       ("perl-xml-simple" ,perl-xml-simple)
-       ("perl-xml-compile" ,perl-xml-compile)
-       ("perl-xml-compile-wsdl11" ,perl-xml-compile-wsdl11)
-       ("perl-xml-parser" ,perl-xml-parser)
-       ("python" ,python-2) ;only works with Python 2
-       ("libxml2" ,libxml2)
-       ("libxslt" ,libxslt)
-       ("openmpi" ,openmpi)
-       ("ghostscript" ,ghostscript)
-       ("inetutils" ,inetutils) ;for "hostname"
-       ("zlib" ,zlib)))
+     (list perl
+           perl-file-which
+           perl-html-parser
+           perl-html-template
+           perl-xml-simple
+           perl-xml-compile
+           perl-xml-compile-wsdl11
+           perl-xml-parser
+           python-2                     ;only works with Python 2
+           libxml2
+           libxslt
+           openmpi
+           ghostscript
+           inetutils                    ;for "hostname"
+           zlib))
     (propagated-inputs
      ;; "which" must be propagated because of the weird way it is used
      ;; in "src/exec_parallel.c".  The buffer "cmd_len" is arranged to
@@ -495,7 +495,7 @@ a ChIP-seq peak caller.")
      ;; string "which ".  I don't want to mess with pointers and
      ;; buffer lengths just to hardcode a path to the "which"
      ;; executable.
-     `(("which" ,which)))
+     (list which))
     (home-page "http://www.tbi.univie.ac.at/RNA/index.html")
     (synopsis "Motif-based sequence analysis tools")
     (description
