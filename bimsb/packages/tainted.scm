@@ -142,19 +142,19 @@ particularly an issue.")
     (properties `((upstream-name . "tRanslatome")))
     (build-system r-build-system)
     (propagated-inputs
-     `(("r-anota" ,r-anota)
-       ("r-biobase" ,r-biobase)
-       ("r-deseq" ,r-deseq)
-       ("r-edger" ,r-edger)
-       ("r-gosemsim" ,r-gosemsim)
-       ("r-gplots" ,r-gplots)
-       ("r-heatplus" ,r-heatplus)
-       ("r-limma" ,r-limma)
-       ("r-org-hs-eg-db" ,r-org-hs-eg-db)
-       ("r-plotrix" ,r-plotrix)
-       ("r-rankprod" ,r-rankprod)       ; non-free
-       ("r-sigpathway" ,r-sigpathway)
-       ("r-topgo" ,r-topgo)))
+     (list r-anota
+           r-biobase
+           r-deseq
+           r-edger
+           r-gosemsim
+           r-gplots
+           r-heatplus
+           r-limma
+           r-org-hs-eg-db
+           r-plotrix
+           r-rankprod                   ; non-free
+           r-sigpathway
+           r-topgo))
     (home-page "https://bioconductor.org/packages/tRanslatome/")
     (synopsis "Comparison between multiple levels of gene expression")
     (description
