@@ -469,10 +469,10 @@ and all possible secondary structures.")
                       (bin (string-append out "/bin")))
                  (install-file "RNAnue" bin)))))))
       (inputs
-       `(("boost" ,boost)
-         ("segemehl" ,segemehl)
-         ("seqan" ,seqan)
-         ("viennarna" ,viennarna)))
+       (list boost
+             segemehl
+             seqan
+             viennarna))
       (home-page "https://github.com/Ibvt/RNAnue")
       (synopsis "Detect RNA-RNA interactions from Direct-Duplex-Detection data")
       (description
