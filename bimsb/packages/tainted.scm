@@ -422,9 +422,9 @@ for analyzing sets of related RNAs without known common structure.")
                (chmod (string-append bin "/cluster") #o755)
                #t))))))
     (inputs
-     `(("ruby" ,ruby)
-       ("boost" ,boost-1.58)
-       ("viennarna" ,viennarna-1.8)))
+     (list ruby
+           boost-1.58
+           viennarna-1.8))
     (synopsis "Clustering of non-coding RNAs")
     (description
      "EnsembleClust provides tools for fast and accurate clustering of
