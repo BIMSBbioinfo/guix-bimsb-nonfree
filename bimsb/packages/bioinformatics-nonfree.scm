@@ -1136,35 +1136,34 @@ cell types from single-cell RNA-seq data.")
 				 (delete-file "fanc/test/test_matrix.py")
 				 (invoke "pytest" "-vvv" "-m" "not longrunning")))))))
 	  (propagated-inputs
-	   `(("python-numpy" ,python-numpy)
-		 ("python-scipy" ,python-scipy)
-		 ("python-pillow" ,python-pillow)
-		 ("python-matplotlib" ,python-matplotlib)
-		 ("python-pandas" ,python-pandas)
-		 ("python-pysam" ,python-pysam)
-		 ("python-biopython" ,python-biopython)
-		 ("python-pybedtools" ,python-pybedtools)
-		 ("python-pybigwig" ,python-pybigwig)
-		 ("python-pyyaml" ,python-pyyaml)
-		 ("python-pywavelets" ,python-pywavelets)
-		 ("python-tables" ,python-tables)
-		 ("python-seaborn" ,python-seaborn)
-		 ("python-future" ,python-future)
-		 ("python-gridmap" ,python-gridmap)
-		 ("python-intervaltree" ,python-intervaltree)
-		 ("python-genomic-regions" ,python-genomic-regions)
-		 ("python-scikit-learn" ,python-scikit-learn)
-		 ("python-scikit-image" ,python-scikit-image)
-		 ("python-cooler" ,python-cooler)
-		 ("python-tifffile" ,python-tifffile)
-		 ("python-imageio" ,python-imageio)
-		 ("python-h5py" ,python-h5py)
-		 ("python-progressbar2" ,python-progressbar2)
-		 ("python-msgpack" ,python-msgpack)
-		 ("python-msgpack-numpy" ,python-msgpack-numpy)))
+	   (list python-biopython
+		     python-cooler
+		     python-future
+		     python-genomic-regions
+		     python-gridmap
+		     python-h5py
+		     python-imageio
+		     python-intervaltree
+		     python-matplotlib
+		     python-msgpack
+		     python-msgpack-numpy
+             python-numpy
+		     python-pandas
+		     python-pillow
+		     python-progressbar2
+		     python-pybedtools
+		     python-pybigwig
+		     python-pysam
+		     python-pywavelets
+		     python-pyyaml
+		     python-scikit-image
+		     python-scikit-learn
+		     python-scipy
+		     python-seaborn
+		     python-tables
+		     python-tifffile))
 	  (native-inputs
-	   `(("python-cython" ,python-cython)
-		 ("python-pytest" ,python-pytest)))
+	   (list python-cython python-pytest))
 	  (home-page "https://github.com/vaquerizaslab/fanc")
 	  (synopsis "Framework for the analysis of C-like data")
 	  (description "FAN-C provides a pipeline for analysing Hi-C data
