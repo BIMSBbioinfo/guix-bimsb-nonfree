@@ -1188,12 +1188,10 @@ starting at mapped paired-end sequencing reads.")
          ("targetscan_70_output.txt" "share/targetscan_70/")
          ("UTR_Sequences_sample.txt" "share/targetscan_70/")
          ("miR_Family_info_sample.txt" "share/targetscan_70/"))))
-    (native-inputs
-     `(("unzip" ,unzip)))
-    (inputs
-     `(("perl" ,perl)))
+    (home-page "http://www.targetscan.org")
+    (native-inputs (list unzip))
+    (inputs (list perl))
     (synopsis "This program predicts miRNA targets using the TargetScanS
 algorithm.")
     (description "It produces output as displayed in TargetScan.")
-    (home-page "http://www.targetscan.org")
     (license (nonfree:non-free "All Rights Reserved"))))
