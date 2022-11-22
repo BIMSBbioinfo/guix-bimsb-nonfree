@@ -971,11 +971,11 @@ non-military and non-redistribution)."))))
            "1b1g4dlmfdyhn56bz1mkh9ymirri43wiz7rjhs7py3y7bdw1s3yr"))))
       (build-system r-build-system)
       (propagated-inputs
-       `(("r-r6" ,r-r6)
-         ("r-hdf5r" ,r-hdf5r)
-         ("r-iterators" ,r-iterators)
-         ("r-itertools" ,r-itertools)
-         ("r-matrix" ,r-matrix)))
+       (list r-r6
+             r-hdf5r
+             r-iterators
+             r-itertools
+             r-matrix))
       (home-page "https://github.com/mojaveazure/loomR")
       (synopsis "R interface for loom files")
       (description "This package provides an R interface to access, create,
