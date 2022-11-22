@@ -740,7 +740,13 @@ the human genome sequence.")
                 "0bqvv26g4ic3nmrcdnnh7kqly86ly9gym75nw1wyzav4ad5h8rqv"))))
     (build-system gnu-build-system)
     ;; FIXME: there are test failures, but I'm not sure why.
-    (arguments '(#:tests? #f))
+    (arguments
+     '(#:tests? #f
+       #:phases
+       (modify-phases %standard-phases
+         ;; Because of multiple definitions.
+         (add-after 'unpack 'set-fcommon
+           (lambda _ (setenv "CFLAGS" "-fcommon"))))))
     (inputs (list perl))
     (home-page "http://research-pub.gene.com/gmap/")
     (synopsis "Genomic mapper and aligner")
