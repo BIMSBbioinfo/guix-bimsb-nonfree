@@ -295,18 +295,19 @@ sequencing data (Solexa/Illumina, 454, ...).")
 (define-public locarna
   (package
     (name "locarna")
-    (version "1.8.10")
+    (version "1.9.2.1")
     (source (origin
               (method url-fetch)
-              (uri (string-append "http://www.bioinf.uni-freiburg.de/"
-                                  "Software/LocARNA/Releases/locarna-"
-                                  version ".tar.gz"))
+              (uri (string-append "https://github.com/s-will/LocARNA"
+                                  "/releases/download/v" version
+                                  "/locarna-" version ".tar.gz"))
               (sha256
                (base32
-                "0rq53xd8v1wqcbhj8g2lqir2z0nk16pcli6x4bj5xzlbsimy86ri"))))
+                "17k1xlki4jravm6c98vm82klzxhw33fg4ibyh4n4czlsaz0hvqh8"))))
     (build-system gnu-build-system)
     (arguments
      (list
+      #:tests? #false ;XXX: requires tcoffee
       #:phases
       #~(modify-phases %standard-phases
           (add-after 'unpack 'fix-reference-to-/bin/cp
@@ -322,7 +323,9 @@ sequencing data (Solexa/Illumina, 454, ...).")
            automake
            libtool
            doxygen
+           which
            pkg-config))
+    (home-page "http://www.bioinf.uni-freiburg.de/Software/LocARNA/")
     (synopsis "RNA alignment tools")
     (description
      "LocARNA is a collection of alignment tools for the structural
@@ -330,7 +333,6 @@ analysis of RNA.  Given a set of RNA sequences, LocARNA simultaneously
 aligns and predicts common structures for your RNAs.  In this way,
 LocARNA performs Sankoff-like alignment and is in particular suited
 for analyzing sets of related RNAs without known common structure.")
-    (home-page "http://www.bioinf.uni-freiburg.de/Software/LocARNA/")
     (license license:gpl3)))
 
 ;; This software is released under the GPL but depends on the non-free
