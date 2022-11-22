@@ -284,11 +284,11 @@ deviation (SD) plots, coefficient of variation (CV) plots.")
                    ;; Any error message found: failure; else: success.
                    "&& exit 1; exit 0"))))))))
     (inputs
-     `(("bowtie1" ,bowtie1)
-       ("perl-pdf-api2" ,perl-pdf-api2)
-       ("perl" ,perl)
-       ("randfold" ,randfold)
-       ("viennarna" ,viennarna)))
+     (list bowtie1
+           perl-pdf-api2
+           perl
+           randfold
+           viennarna))
     (synopsis "Discovering known and novel miRNAs from small RNA sequencing data")
     (description "miRDeep2 discovers active known or novel miRNAs from deep
 sequencing data (Solexa/Illumina, 454, ...).")
