@@ -912,36 +912,32 @@ available for the 7 continuous distributions.")
                 "0zzlfl19ylj06np8hhmkjavv7906nk58ngg5irc37jr03p346l3x"))))
     (build-system gnu-build-system)
     (arguments
-     `(#:tests? #f                      ; no test target
-       #:phases
-       (modify-phases %standard-phases
-         (replace 'configure
-           (lambda* (#:key outputs #:allow-other-keys)
-             (let ((out (assoc-ref outputs "out")))
-               ;; Ensure that we can override the target directory
-               (substitute* "perl-scripts/configure_rsat.pl"
-                 (("\\$rsat_parent_path = .*;")
-                  (string-append "$rsat_parent_path = \""
-                                 out "\";")))
-               ;; Override the target directory
-               (setenv "RSAT" out)
-               ;; Target directory must exist
-               (mkdir-p "bin")
-               (invoke "perl" "perl-scripts/configure_rsat.pl"))
-             #t))
-         (replace 'build
-           (lambda _
-             ;; FIXME: this first step is pretty useless, because it
-             ;; creates directories not in the install location but in
-             ;; the build directory.
-             (invoke "make" "-f" "makefiles/init_rsat.mk" "init")
-             (invoke "make" "-f" "makefiles/init_rsat.mk" "compile_all")
-             #t))
-         (replace 'install
-           (lambda* (#:key outputs #:allow-other-keys)
-             (let ((out (assoc-ref outputs "out")))
-               (copy-recursively "bin" (string-append out "/bin"))
-               #t))))))
+     (list
+      #:tests? #f                       ; no test target
+      #:phases
+      #~(modify-phases %standard-phases
+          (replace 'configure
+            (lambda _
+              ;; Ensure that we can override the target directory
+              (substitute* "perl-scripts/configure_rsat.pl"
+                (("\\$rsat_parent_path = .*;")
+                 (string-append "$rsat_parent_path = \""
+                                #$output "\";")))
+              ;; Override the target directory
+              (setenv "RSAT" #$output)
+              ;; Target directory must exist
+              (mkdir-p "bin")
+              (invoke "perl" "perl-scripts/configure_rsat.pl")))
+          (replace 'build
+            (lambda _
+              ;; FIXME: this first step is pretty useless, because it
+              ;; creates directories not in the install location but in
+              ;; the build directory.
+              (invoke "make" "-f" "makefiles/init_rsat.mk" "init")
+              (invoke "make" "-f" "makefiles/init_rsat.mk" "compile_all")))
+          (replace 'install
+            (lambda _
+              (copy-recursively "bin" (string-append #$output "/bin")))))))
     (native-inputs
      (list perl))
     (home-page "http://rsat.eead.csic.es/plants/")
