@@ -305,6 +305,14 @@ sequencing data (Solexa/Illumina, 454, ...).")
                (base32
                 "0rq53xd8v1wqcbhj8g2lqir2z0nk16pcli6x4bj5xzlbsimy86ri"))))
     (build-system gnu-build-system)
+    (arguments
+     (list
+      #:phases
+      #~(modify-phases %standard-phases
+          (add-after 'unpack 'fix-reference-to-/bin/cp
+            (lambda _
+              (substitute* "src/Utils/mlocarna"
+                (("/bin/cp") (which "cp"))))))))
     (inputs
      (list file
            perl
