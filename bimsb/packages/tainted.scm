@@ -457,17 +457,16 @@ and all possible secondary structures.")
                  '(delete-file-recursively "build"))))
       (build-system cmake-build-system)
       (arguments
-       `(#:tests? #false ; there are none
-         #:phases
-         (modify-phases %standard-phases
-           (add-after 'unpack 'enter-source-directory
-             (lambda _
-               (chdir "source")))
-           (replace 'install
-             (lambda* (#:key inputs outputs #:allow-other-keys)
-               (let* ((out (assoc-ref outputs "out"))
-                      (bin (string-append out "/bin")))
-                 (install-file "RNAnue" bin)))))))
+       (list
+        #:tests? #false                 ; there are none
+        #:phases
+        #~(modify-phases %standard-phases
+            (add-after 'unpack 'enter-source-directory
+              (lambda _
+                (chdir "source")))
+            (replace 'install
+              (lambda _
+                (install-file "RNAnue" (string-append #$output "/bin")))))))
       (inputs
        (list boost
              segemehl
