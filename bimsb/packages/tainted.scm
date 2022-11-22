@@ -186,103 +186,98 @@ deviation (SD) plots, coefficient of variation (CV) plots.")
                 "1mlihj6c6zkqsvrdqnz5wjz4annjr8yi6slv63bbcl4bdwdywcd6"))))
     (build-system gnu-build-system)
     (arguments
-     `(#:tests? #f ;; no check target; instead: test after install (see below)
-       #:phases
-       (modify-phases %standard-phases
-         (delete 'configure)
-         (replace 'build
-           (lambda* (#:key inputs outputs #:allow-other-keys)
-             (let ((out (assoc-ref outputs "out")))
-               ;; patch scripts checking for ../install_successful file
-               (substitute* '("src/mapper.pl" "src/miRDeep2.pl"
-                              "src/quantifier.pl")
-                 (("(\\$a=)`which (miRDeep2\\.pl)`" _ lhs script)
-                   (string-append lhs "\"" out "/bin/" script "\""))
-                 (("\\$bn/\\.\\./install_successful")
-                   (string-append out "/share/mirdeep2/install_successful")))
-               ;; patch script using ../Rfam_for_miRDeep.fa file
-               (substitute* "src/miRDeep2.pl"
-                 (("\\$\\{?scripts\\}?/\\.\\.(/Rfam_for_miRDeep\\.fa)" _ file)
-                  (string-append out "/share/mirdeep2" file))
-                 ;; Comment out all lines featuring the `scripts` variable for
-                 ;; paths relative to the script.
-                 ((".*\\$scripts.*" line)
-                  (string-append "#" line))))
-             ;; patch script using $(dirname `which miRDeep2.pl`)/indexes dir
-             (substitute* "src/make_html.pl"
-               (("`which miRDeep2\\.pl`")
-                "`realpath ~/.local/share/mirdeep2` . \"/\"")
-               (("mkdir (\"\\$\\{scripts\\}indexes)" _ path)
-                (string-append "mkdir -p " path)))
-             #t))
-         (replace 'install
-           (lambda* (#:key inputs outputs #:allow-other-keys)
-             (let ((out (assoc-ref outputs "out")))
-               (with-directory-excursion "src"
-                 (copy-recursively "." (string-append out "/bin")))
-               ;; place Rfam_for_miRDeep.fa in /share/mirdeep2
-               (mkdir-p (string-append out "/share/mirdeep2"))
-               (copy-file
-                "Rfam_for_miRDeep.fa"
-                (string-append out "/share/mirdeep2/Rfam_for_miRDeep.fa"))
-               ;; create install_successful file in share/mirdeep2
-               (with-output-to-file
-                   (string-append out "/share/mirdeep2/install_successful")
-                 (const #t))) ;; simply touch the file
-             #t))
-         (add-after 'install 'wrap-perl-scripts
-           (lambda* (#:key inputs outputs #:allow-other-keys)
-             (let ((out (assoc-ref outputs "out")))
-               ;; Make sure perl scripts find all perl inputs at runtime.
-               (for-each (lambda (prog)
-                           (wrap-program (string-append out "/bin/" prog)
-                             `("PERL5LIB" ":" prefix
-                               (,(getenv "PERL5LIB")))))
-                         '("make_html2.pl"
-                           "make_html.pl"
-                           "miRDeep2.pl"))
-               ;; Make sure perl scripts find all input binaries at runtime.
-               (for-each (lambda (prog)
-                           (wrap-program (string-append out "/bin/" prog)
-                             `("PATH" ":" prefix
-                               (,(getenv "PATH")))))
-                         '("make_html2.pl"
-                           "make_html.pl"
-                           "mapper.pl"
-                           "miRDeep2_core_algorithm.pl"
-                           "miRDeep2.pl"
-                           "prepare_signature.pl"
-                           "quantifier.pl"))
-               #t)))
-         (add-after 'wrap-perl-scripts 'test
-           (lambda* (#:key inputs outputs #:allow-other-keys)
-             (setenv "PATH" (string-append (assoc-ref outputs "out") "/bin:"
-                                           (getenv "PATH")))
-             (with-directory-excursion "tutorial_dir"
-               ;; Script writes to "~/.local/share/mirdeep2", but
-               ;; HOME=/homeless-shelter by default:
-               (setenv "HOME" ".")
-               (mkdir-p ".local/share/mirdeep2")
-               ;; Run script in bash to processs output for error detection:
-               (invoke
+     (list
+      #:tests? #f ;no check target; instead: test after install (see below)
+      #:phases
+      #~(modify-phases %standard-phases
+          (delete 'configure)
+          (replace 'build
+            (lambda _
+              ;; patch scripts checking for ../install_successful file
+              (substitute* '("src/mapper.pl" "src/miRDeep2.pl"
+                             "src/quantifier.pl")
+                (("(\\$a=)`which (miRDeep2\\.pl)`" _ lhs script)
+                 (string-append lhs "\"" #$output "/bin/" script "\""))
+                (("\\$bn/\\.\\./install_successful")
+                 (string-append #$output "/share/mirdeep2/install_successful")))
+              ;; patch script using ../Rfam_for_miRDeep.fa file
+              (substitute* "src/miRDeep2.pl"
+                (("\\$\\{?scripts\\}?/\\.\\.(/Rfam_for_miRDeep\\.fa)" _ file)
+                 (string-append #$output "/share/mirdeep2" file))
+                ;; Comment out all lines featuring the `scripts` variable for
+                ;; paths relative to the script.
+                ((".*\\$scripts.*" line)
+                 (string-append "#" line)))
+              ;; patch script using $(dirname `which miRDeep2.pl`)/indexes dir
+              (substitute* "src/make_html.pl"
+                (("`which miRDeep2\\.pl`")
+                 "`realpath ~/.local/share/mirdeep2` . \"/\"")
+                (("mkdir (\"\\$\\{scripts\\}indexes)" _ path)
+                 (string-append "mkdir -p " path)))))
+          (replace 'install
+            (lambda _
+              (with-directory-excursion "src"
+                (copy-recursively "." (string-append #$output "/bin")))
+              ;; place Rfam_for_miRDeep.fa in /share/mirdeep2
+              (mkdir-p (string-append #$output "/share/mirdeep2"))
+              (copy-file
+               "Rfam_for_miRDeep.fa"
+               (string-append #$output "/share/mirdeep2/Rfam_for_miRDeep.fa"))
+              ;; create install_successful file in share/mirdeep2
+              (with-output-to-file
+                  (string-append #$output "/share/mirdeep2/install_successful")
+                (const #t))))
+          (add-after 'install 'wrap-perl-scripts
+            (lambda _
+              ;; Make sure perl scripts find all perl inputs at runtime.
+              (for-each (lambda (prog)
+                          (wrap-program (string-append #$output "/bin/" prog)
+                            `("PERL5LIB" ":" prefix
+                              (,(getenv "PERL5LIB")))))
+                        '("make_html2.pl"
+                          "make_html.pl"
+                          "miRDeep2.pl"))
+              ;; Make sure perl scripts find all input binaries at runtime.
+              (for-each (lambda (prog)
+                          (wrap-program (string-append #$output "/bin/" prog)
+                            `("PATH" ":" prefix
+                              (,(getenv "PATH")))))
+                        '("make_html2.pl"
+                          "make_html.pl"
+                          "mapper.pl"
+                          "miRDeep2_core_algorithm.pl"
+                          "miRDeep2.pl"
+                          "prepare_signature.pl"
+                          "quantifier.pl"))))
+          (add-after 'wrap-perl-scripts 'test
+            (lambda _
+              (setenv "PATH" (string-append #$output "/bin:"
+                                            (getenv "PATH")))
+              (with-directory-excursion "tutorial_dir"
+                ;; Script writes to "~/.local/share/mirdeep2", but
+                ;; HOME=/homeless-shelter by default:
+                (setenv "HOME" ".")
+                (mkdir-p ".local/share/mirdeep2")
+                ;; Run script in bash to processs output for error detection:
+                (invoke
                  "bash" "-c"
                  (string-append
-                   ;; Script always returns 0, reports errors to stdout/stderr.
-                   "./run_tut.sh 2>&1"
-                   ;; Copy (combined) output to stderr for build log:
-                   " | while read output; do"
-                   " echo \"$output\";"
-                   " echo \"$output\" >&2; "
-                   " done"
-                   ;; Check output (the copy on stdout) for error messages.
-                   " | grep -q"
-                   ;; Printed to stdout when the script detects an error:
-                   " -e 'An error occured'"
-                   ;; Ignored by the script, but on stderr:
-                   " -e 'No such file or directory'"
-                   " -e 'Permission denied'"
-                   ;; Any error message found: failure; else: success.
-                   "&& exit 1; exit 0"))))))))
+                  ;; Script always returns 0, reports errors to stdout/stderr.
+                  "./run_tut.sh 2>&1"
+                  ;; Copy (combined) output to stderr for build log:
+                  " | while read output; do"
+                  " echo \"$output\";"
+                  " echo \"$output\" >&2; "
+                  " done"
+                  ;; Check output (the copy on stdout) for error messages.
+                  " | grep -q"
+                  ;; Printed to stdout when the script detects an error:
+                  " -e 'An error occured'"
+                  ;; Ignored by the script, but on stderr:
+                  " -e 'No such file or directory'"
+                  " -e 'Permission denied'"
+                  ;; Any error message found: failure; else: success.
+                  "&& exit 1; exit 0"))))))))
     (inputs
      (list bowtie1
            perl-pdf-api2
