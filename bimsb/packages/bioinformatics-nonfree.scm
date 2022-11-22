@@ -943,7 +943,7 @@ available for the 7 continuous distributions.")
                (copy-recursively "bin" (string-append out "/bin"))
                #t))))))
     (native-inputs
-     `(("perl" ,perl)))
+     (list perl))
     (home-page "http://rsat.eead.csic.es/plants/")
     (synopsis "Regulatory sequence analysis tools")
     (description "This package provides a subset of the Regulatory
