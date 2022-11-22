@@ -306,15 +306,15 @@ sequencing data (Solexa/Illumina, 454, ...).")
                 "0rq53xd8v1wqcbhj8g2lqir2z0nk16pcli6x4bj5xzlbsimy86ri"))))
     (build-system gnu-build-system)
     (inputs
-     `(("file" ,file)
-       ("perl" ,perl)
-       ("viennarna" ,viennarna)))
+     (list file
+           perl
+           viennarna))
     (native-inputs
-     `(("autoconf" ,autoconf)
-       ("automake" ,automake)
-       ("libtool" ,libtool)
-       ("doxygen" ,doxygen)
-       ("pkg-config" ,pkg-config)))
+     (list autoconf
+           automake
+           libtool
+           doxygen
+           pkg-config))
     (synopsis "RNA alignment tools")
     (description
      "LocARNA is a collection of alignment tools for the structural
