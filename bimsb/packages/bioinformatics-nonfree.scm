@@ -704,19 +704,19 @@ not the pipeline scripts.")
          "081nwnd97p2ry4rjnnia6816cssm682hlm7hzqhlnjpc2kqvrn86"))))
     (build-system gnu-build-system)
     (arguments
-     `(#:tests? #f ; There is no test target
-       #:make-flags (list "MACHTYPE=i386"
+     (list
+      #:tests? #f                       ; There is no test target
+      #:make-flags '(list "MACHTYPE=i386"
                           "BINDIR=/tmp/bin"
                           "CFLAGS=-fcommon")
-       #:phases
-       (modify-phases %standard-phases
-         (replace 'configure
-           (lambda _ (mkdir-p "/tmp/bin")))
-         (replace 'install
-           (lambda* (#:key outputs #:allow-other-keys)
-             (let ((bin (string-append (assoc-ref outputs "out")
-                                       "/bin")))
-               (copy-recursively "/tmp/bin" bin)))))))
+      #:phases
+      #~(modify-phases %standard-phases
+          (replace 'configure
+            (lambda _ (mkdir-p "/tmp/bin")))
+          (replace 'install
+            (lambda _
+              (let ((bin (string-append #$output "/bin")))
+                (copy-recursively "/tmp/bin" bin)))))))
     (native-inputs (list unzip))
     (inputs (list libpng))
     (home-page "http://genome.ucsc.edu")
