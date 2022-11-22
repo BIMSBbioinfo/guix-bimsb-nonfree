@@ -284,10 +284,10 @@ deviation (SD) plots, coefficient of variation (CV) plots.")
            perl
            randfold
            viennarna))
+    (home-page "https://www.mdc-berlin.de/8551903/en/")
     (synopsis "Discovering known and novel miRNAs from small RNA sequencing data")
     (description "miRDeep2 discovers active known or novel miRNAs from deep
 sequencing data (Solexa/Illumina, 454, ...).")
-    (home-page "https://www.mdc-berlin.de/8551903/en/")
     (license license:gpl3+)))
 
 ;; Although this program is released under the GPL it depends on
