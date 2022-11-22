@@ -1095,15 +1095,15 @@ cell types from single-cell RNA-seq data.")
          "13qqq5rvzbzday62jjhkx3qpsi2sip0rcxwacadlbd71h4cjjcad"))))
     (build-system python-build-system)
     (propagated-inputs
-     `(("python-future" ,python-future)
-       ("python-intervaltree" ,python-intervaltree)
-       ("python-numpy" ,python-numpy)
-       ("python-pandas" ,python-pandas)
-       ("python-pybedtools" ,python-pybedtools)
-       ("python-pybigwig" ,python-pybigwig)
-       ("python-pysam" ,python-pysam)))
+     (list python-future
+           python-intervaltree
+           python-numpy
+           python-pandas
+           python-pybedtools
+           python-pybigwig
+           python-pysam))
 	(native-inputs
-	 `(("python-pytest" ,python-pytest)))
+	 (list python-pytest))
     (home-page "")
     (synopsis "Consistently handle genomic regions")
     (description
