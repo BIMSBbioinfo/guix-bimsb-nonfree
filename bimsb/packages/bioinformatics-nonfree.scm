@@ -535,6 +535,7 @@ datasets (MEME-ChIP).")
     (arguments
      (list
       #:tests? #f                       ; There are no tests.
+      #:make-flags '(list "CFLAGS=-fcommon")
       #:phases
       #~(modify-phases %standard-phases
           (delete 'configure)           ; There is no configure phase.
