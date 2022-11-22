@@ -1130,15 +1130,11 @@ cell types from single-cell RNA-seq data.")
        `(#:phases
 		 (modify-phases %standard-phases
            (replace 'check
-			 (lambda* (#:key outputs inputs tests? #:allow-other-keys)
-               (if tests?
-                   (begin
-					 ;; Make installed package available for running the tests.
-					 (add-installed-pythonpath inputs outputs)
-					 ;; XXX: some of the tests here just take forever
-					 (delete-file "fanc/test/test_matrix.py")
-					 (invoke "pytest" "-vvv" "-m" "not longrunning"))
-                   #t))))))
+			 (lambda* (#:key tests? #:allow-other-keys)
+               (when tests?
+				 ;; XXX: some of the tests here just take forever
+				 (delete-file "fanc/test/test_matrix.py")
+				 (invoke "pytest" "-vvv" "-m" "not longrunning")))))))
 	  (propagated-inputs
 	   `(("python-numpy" ,python-numpy)
 		 ("python-scipy" ,python-scipy)
