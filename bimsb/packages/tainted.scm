@@ -70,40 +70,39 @@
                 "183k8a753fjd6fdv1jf3n5rxfry11358kl98k76z6dvm3ggrz651"))))
     (build-system gnu-build-system)
     (arguments
-     `(#:tests? #f                      ; no "check" target
-       #:phases
-       (modify-phases %standard-phases
-         (delete 'configure)
-         (replace 'build
-           (lambda _
-             (substitute* '("gen_transcript_cdf.pl"
-                            "ks_test_uniform.pl")
-               (("gunzip -c")
-                (string-append (which "gunzip") " -c")))
-             (substitute* "tag2profile.pl"
-               (("mkdir") (which "mkdir"))
-               (("rm -rf") (string-append (which "rm") " -rf")))
-             (substitute* "cal_mrin.R"
-               (("^suppressMessages" m)
-                (string-append "#!" (which "Rscript") "\n" m)))
-             #t))
-         (replace 'install
-           (lambda* (#:key outputs #:allow-other-keys)
-             (let ((bin (string-append (assoc-ref outputs "out") "/bin")))
-               (mkdir-p bin)
-               (for-each (lambda (file)
-                           (install-file file bin)
-                           (chmod file #o555)
-                           (wrap-program (string-append bin "/" (basename file))
-                             `("PERL5LIB" ":" prefix (,(getenv "PERL5LIB")))))
-                         '("gen_ks_matrix.pl" "gen_transcript_cdf.pl"
-                           "ks_test_uniform.pl" "tag2profile.pl"))
-               (let ((file "cal_mrin.R"))
-                 (install-file file bin)
-                 (chmod file #o555)
-                 (wrap-program (string-append bin "/" (basename file))
-                   `("R_LIBS_SITE" ":" prefix (,(getenv "R_LIBS_SITE"))))))
-             #t)))))
+     (list
+      #:tests? #false                      ; no "check" target
+      #:phases
+      #~(modify-phases %standard-phases
+          (delete 'configure)
+          (replace 'build
+            (lambda _
+              (substitute* '("gen_transcript_cdf.pl"
+                             "ks_test_uniform.pl")
+                (("gunzip -c")
+                 (string-append (which "gunzip") " -c")))
+              (substitute* "tag2profile.pl"
+                (("mkdir") (which "mkdir"))
+                (("rm -rf") (string-append (which "rm") " -rf")))
+              (substitute* "cal_mrin.R"
+                (("^suppressMessages" m)
+                 (string-append "#!" (which "Rscript") "\n" m)))))
+          (replace 'install
+            (lambda _
+              (let ((bin (string-append #$output "/bin")))
+                (mkdir-p bin)
+                (for-each (lambda (file)
+                            (install-file file bin)
+                            (chmod file #o555)
+                            (wrap-program (string-append bin "/" (basename file))
+                              `("PERL5LIB" ":" prefix (,(getenv "PERL5LIB")))))
+                          '("gen_ks_matrix.pl" "gen_transcript_cdf.pl"
+                            "ks_test_uniform.pl" "tag2profile.pl"))
+                (let ((file "cal_mrin.R"))
+                  (install-file file bin)
+                  (chmod file #o555)
+                  (wrap-program (string-append bin "/" (basename file))
+                    `("R_LIBS_SITE" ":" prefix (,(getenv "R_LIBS_SITE")))))))))))
     (inputs
      `(("coreutils" ,coreutils)
        ("perl" ,perl)
