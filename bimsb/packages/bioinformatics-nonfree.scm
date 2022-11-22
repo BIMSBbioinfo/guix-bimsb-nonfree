@@ -836,15 +836,15 @@ experiments.")
                           "serialization"
                           "thread")))))
       (inputs
-       `(("eigen" ,eigen)
-         ("htslib" ,htslib)
-         ("boost" ,boost-1.68)       ;latest boost doesn't allow c++03
-         ("python" ,python-2)
-         ("zlib" ,zlib)))
+       (list eigen
+             htslib
+             boost-1.68              ;latest boost doesn't allow c++03
+             python-2
+             zlib))
       (native-inputs
-       `(("autoconf" ,autoconf)
-         ("automake" ,automake)
-         ("gcc" ,gcc-7)))
+       (list autoconf
+             automake
+             gcc-7))
       (home-page "http://cole-trapnell-lab.github.io/cufflinks/")
       (synopsis "Transcriptome assembly and RNA-Seq expression analysis")
       (description
