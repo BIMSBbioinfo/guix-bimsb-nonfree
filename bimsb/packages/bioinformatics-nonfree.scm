@@ -1085,14 +1085,14 @@ cell types from single-cell RNA-seq data.")
 (define-public python-genomic-regions
   (package
     (name "python-genomic-regions")
-    (version "0.0.8")
+    (version "0.0.10")
     (source
      (origin
        (method url-fetch)
        (uri (pypi-uri "genomic_regions" version))
        (sha256
         (base32
-         "13qqq5rvzbzday62jjhkx3qpsi2sip0rcxwacadlbd71h4cjjcad"))))
+         "0hz811iyd1prml1r90qyzimmwyjwycwkjqw4vnl12bxy61rfzjz5"))))
     (build-system python-build-system)
     (propagated-inputs
      (list python-future
