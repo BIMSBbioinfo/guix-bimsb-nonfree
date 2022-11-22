@@ -618,59 +618,56 @@ structural and functional information.")
         (base32
          "0my24iw5mqdrq1k08casdv5p4wvk01inikhvi8mb74r7z93kcpf5"))
        (modules '((guix build utils)))
-       (snippet
-        '(begin
-           ;; Delete bundled stuff
-           (delete-file-recursively "external")
-           #t))))
+       ;; Delete bundled stuff
+       (snippet '(delete-file-recursively "external"))))
     (build-system gnu-build-system)
     (arguments
-     `(#:tests? #f ; no check target
-       #:make-flags
-       ,#~(list "ZLIB=-lz"
-                (string-append "BAMTOOLSSRC="
-                               #$(this-package-input "bamtools")
-                               "/lib/bamtools/libbamtools.a")
-                (string-append "BAMTOOLSDIR="
-                               #$(this-package-input "bamtools")
-                               "/include/bamtools"))
-       #:phases
-       (modify-phases %standard-phases
-         (delete 'configure)
-         (add-after 'unpack 'chdir
-           (lambda _ (chdir "tools")))
-         (add-after 'chdir 'do-not-use-bundled-libraries
-           (lambda* (#:key inputs #:allow-other-keys)
-             (substitute* "makefile"
-               (("\\$\\(BAMDIR\\)/\\$\\(BAMLIB\\)")
-                (string-append (assoc-ref inputs "samtools")
-                               "/lib/libbam.a"))
-               (("\\$\\(ZDIR\\)/\\$\\(ZLIB\\)") "$(ZLIB)")
-               ;; Don't try to build the bundled libs
-               (("\\$\\(MAKE\\).*") ""))
-             (substitute* '("FastaIndex.cpp"
-                            "FastaIndex.h")
-               (("#include \"faidx.h\"")
-                "#include <samtools/faidx.h>"))
-             (substitute* "bamfastq.cpp"
-               (("#include \"BamReader.h\"")
-                "#include <bamtools/api/BamReader.h>"))))
-         (replace 'install
-           (lambda* (#:key outputs #:allow-other-keys)
-             (let* ((out (assoc-ref outputs "out"))
-                    (bin (string-append out "/bin")))
-               (for-each
-                (lambda (file) (install-file file bin))
-                '("clustermatepairs"
-                  "setcover"
-                  "calccov"
-                  "estislands"
-                  "dosplitalign"
-                  "evalsplitalign"
-                  "localalign"
-                  "splitseq"
-                  "matealign"
-                  "bamfastq"))))))))
+     (list
+      #:tests? #f                       ; no check target
+      #:make-flags
+      #~(list "ZLIB=-lz"
+              (string-append "BAMTOOLSSRC="
+                             #$(this-package-input "bamtools")
+                             "/lib/bamtools/libbamtools.a")
+              (string-append "BAMTOOLSDIR="
+                             #$(this-package-input "bamtools")
+                             "/include/bamtools"))
+      #:phases
+      #~(modify-phases %standard-phases
+          (delete 'configure)
+          (add-after 'unpack 'chdir
+            (lambda _ (chdir "tools")))
+          (add-after 'chdir 'do-not-use-bundled-libraries
+            (lambda* (#:key inputs #:allow-other-keys)
+              (substitute* "makefile"
+                (("\\$\\(BAMDIR\\)/\\$\\(BAMLIB\\)")
+                 (string-append (assoc-ref inputs "samtools")
+                                "/lib/libbam.a"))
+                (("\\$\\(ZDIR\\)/\\$\\(ZLIB\\)") "$(ZLIB)")
+                ;; Don't try to build the bundled libs
+                (("\\$\\(MAKE\\).*") ""))
+              (substitute* '("FastaIndex.cpp"
+                             "FastaIndex.h")
+                (("#include \"faidx.h\"")
+                 "#include <samtools/faidx.h>"))
+              (substitute* "bamfastq.cpp"
+                (("#include \"BamReader.h\"")
+                 "#include <bamtools/api/BamReader.h>"))))
+          (replace 'install
+            (lambda _
+              (let ((bin (string-append #$output "/bin")))
+                (for-each
+                 (lambda (file) (install-file file bin))
+                 '("clustermatepairs"
+                   "setcover"
+                   "calccov"
+                   "estislands"
+                   "dosplitalign"
+                   "evalsplitalign"
+                   "localalign"
+                   "splitseq"
+                   "matealign"
+                   "bamfastq"))))))))
     (inputs
      (list zlib
            boost
