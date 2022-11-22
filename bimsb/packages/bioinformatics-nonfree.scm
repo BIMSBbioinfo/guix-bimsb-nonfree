@@ -366,8 +366,7 @@ depths and differentiate reliable RDNPs from the background noise.")
                     ;; Delete pre-built binaries
                     (delete-file "FastReadStitcher/src/FStitch")
                     (for-each delete-file
-                              (find-files "FastReadStitcher/src/" "\\.o$"))
-                    #t))))
+                              (find-files "FastReadStitcher/src/" "\\.o$"))))))
       (build-system gnu-build-system)
       (arguments
        (list
