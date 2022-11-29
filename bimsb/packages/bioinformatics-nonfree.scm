@@ -407,68 +407,67 @@ a ChIP-seq peak caller.")
                 "08df4wgiz1baq3749slpmr7df0hg3q4i3cdvap97xw063kx2d9gc"))))
     (build-system gnu-build-system)
     (arguments
-     `(#:phases
-       (modify-phases %standard-phases
-         (add-after 'unpack 'fix-paths-to-tools
-           (lambda _
-             (substitute* "src/utils.c"
-               (("\"hostname")
-                (string-append "\"" (which "hostname"))))
-             #t))
-         (add-after 'unpack 'remove-unused-tests
-           (lambda _
-             ;; We don't build the web server stuff, so we don't need
-             ;; to run the tests for that either.
-             (substitute* "tests/scripts/Makefile.in"
-               (("tomtom.test") ""))))
-         (add-before 'configure 'check-perl-dependencies
-           (lambda _
-             (invoke "perl" "./scripts/dependencies.pl")))
-         (add-after 'install 'wrap-perl-scripts
-           (lambda* (#:key inputs outputs #:allow-other-keys)
-             ;; Make sure perl scripts finds all perl inputs at runtime.
-             (let ((out (assoc-ref outputs "out")))
-               (for-each (lambda (prog)
-                           (wrap-program (string-append out "/bin/" prog)
-                             `("PERL5LIB" ":" prefix
-                               (,(getenv "PERL5LIB")))))
-                         '("ama-qvalues"
-                           "beeml2meme"
-                           "chen2meme"
-                           "dreme_xml_to_html"
-                           "dreme_xml_to_txt"
-                           "elm2meme"
-                           "fasta-center"
-                           "fasta-fetch"
-                           "fasta-grep"
-                           "fasta-make-index"
-                           "fasta-most"
-                           "fasta-subsample"
-                           "fasta-unique-names"
-                           "hart2meme-bkg"
-                           "hartemink2psp"
-                           "iupac2meme"
-                           "jaspar2meme"
-                           "mast_xml_to_html"
-                           "mast_xml_to_txt"
-                           "matrix2meme"
-                           "meme-chip"
-                           "meme-rename"
-                           "meme_xml_to_html"
-                           "nmica2meme"
-                           "priority2meme"
-                           "psp-gen"
-                           "rna2meme"
-                           "rsat-retrieve-seq"
-                           "rsat-supported-organisms"
-                           "scpd2meme"
-                           "sites2meme"
-                           "taipale2meme"
-                           "tamo2meme"
-                           "tomtom_xml_to_html"
-                           "transfac2meme"
-                           "uniprobe2meme"))
-              #t))))))
+     (list
+      #:phases
+      #~(modify-phases %standard-phases
+          (add-after 'unpack 'fix-paths-to-tools
+            (lambda _
+              (substitute* "src/utils.c"
+                (("\"hostname")
+                 (string-append "\"" (which "hostname"))))))
+          (add-after 'unpack 'remove-unused-tests
+            (lambda _
+              ;; We don't build the web server stuff, so we don't need
+              ;; to run the tests for that either.
+              (substitute* "tests/scripts/Makefile.in"
+                (("tomtom.test") ""))))
+          (add-before 'configure 'check-perl-dependencies
+            (lambda _
+              (invoke "perl" "./scripts/dependencies.pl")))
+          (add-after 'install 'wrap-perl-scripts
+            (lambda* (#:key inputs outputs #:allow-other-keys)
+              ;; Make sure perl scripts finds all perl inputs at runtime.
+              (for-each (lambda (prog)
+                          (wrap-program (string-append #$output "/bin/" prog)
+                            `("PERL5LIB" ":" prefix
+                              (,(getenv "PERL5LIB")))))
+                        '("ama-qvalues"
+                          "beeml2meme"
+                          "chen2meme"
+                          "dreme_xml_to_html"
+                          "dreme_xml_to_txt"
+                          "elm2meme"
+                          "fasta-center"
+                          "fasta-fetch"
+                          "fasta-grep"
+                          "fasta-make-index"
+                          "fasta-most"
+                          "fasta-subsample"
+                          "fasta-unique-names"
+                          "hart2meme-bkg"
+                          "hartemink2psp"
+                          "iupac2meme"
+                          "jaspar2meme"
+                          "mast_xml_to_html"
+                          "mast_xml_to_txt"
+                          "matrix2meme"
+                          "meme-chip"
+                          "meme-rename"
+                          "meme_xml_to_html"
+                          "nmica2meme"
+                          "priority2meme"
+                          "psp-gen"
+                          "rna2meme"
+                          "rsat-retrieve-seq"
+                          "rsat-supported-organisms"
+                          "scpd2meme"
+                          "sites2meme"
+                          "taipale2meme"
+                          "tamo2meme"
+                          "tomtom_xml_to_html"
+                          "transfac2meme"
+                          "uniprobe2meme")))))))
+    (native-inputs (list gcc-4.9))
     (inputs
      (list perl
            perl-file-which
