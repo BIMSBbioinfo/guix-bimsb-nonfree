@@ -571,17 +571,16 @@ including SNPS, microsatellites, RFLPs and AFLPs.")
                   "0fq33ra4nrnyjvwd4vc9r2mxrdihkb5imwms7b2kl6dr76vfmy1z"))))
       (build-system gnu-build-system)
       (arguments
-       `(#:tests? #f
-         #:phases
-         (modify-phases %standard-phases
-           (delete 'configure)
-           (delete 'build)
-           (replace 'install
-             (lambda* (#:key inputs outputs #:allow-other-keys)
-               (let ((target (string-append (assoc-ref outputs "out")
-                                            "/share/nofold")))
-                 (copy-recursively "." target))
-               #t)))))
+       (list
+        #:tests? #f
+        #:phases
+        #~(modify-phases %standard-phases
+            (delete 'configure)
+            (delete 'build)
+            (replace 'install
+              (lambda _
+                (let ((target (string-append #$output "/share/nofold")))
+                  (copy-recursively "." target)))))))
       (inputs
        (list python-2
              locarna
