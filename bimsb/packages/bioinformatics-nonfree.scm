@@ -583,11 +583,11 @@ including SNPS, microsatellites, RFLPs and AFLPs.")
                  (copy-recursively "." target))
                #t)))))
       (inputs
-       `(("python" ,python-2)
-         ("locarna" ,locarna)
-         ("infernal" ,infernal-1.0)
-         ("r" ,r)
-         ("r-fastcluster" ,r-fastcluster)))
+       (list python-2
+             locarna
+             infernal-1.0
+             r
+             r-fastcluster))
       (synopsis "Motif finder for RNA secondary structures")
       (description
        "NoFold is an approach for characterizing and clustering RNA
