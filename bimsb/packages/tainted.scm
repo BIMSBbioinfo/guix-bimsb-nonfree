@@ -295,7 +295,7 @@ sequencing data (Solexa/Illumina, 454, ...).")
 (define-public locarna
   (package
     (name "locarna")
-    (version "1.9.2.1")
+    (version "2.0.0")
     (source (origin
               (method url-fetch)
               (uri (string-append "https://github.com/s-will/LocARNA"
@@ -303,11 +303,11 @@ sequencing data (Solexa/Illumina, 454, ...).")
                                   "/locarna-" version ".tar.gz"))
               (sha256
                (base32
-                "17k1xlki4jravm6c98vm82klzxhw33fg4ibyh4n4czlsaz0hvqh8"))))
+                "1g7b333wqs8vzcjv8dyqfhhdwimm0clf50qrfj5iyigpqz5d5q1v"))))
     (build-system gnu-build-system)
     (arguments
      (list
-      #:tests? #false ;XXX: requires tcoffee
+      #:tests? #false                   ;XXX: requires tcoffee
       #:phases
       #~(modify-phases %standard-phases
           (add-after 'unpack 'fix-reference-to-/bin/cp
