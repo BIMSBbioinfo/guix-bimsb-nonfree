@@ -2,6 +2,7 @@
 ;;; Copyright © 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
 ;;; Copyright © 2017 CM Massimo <carlomaria.massimo@mdc-berlin.de>
 ;;; Copyright © 2018, 2019, 2021 Marcel Schilling <marcel.schilling@uni-luebeck.de>
+;;; Copyright © 2023 Mădălin Ionel Patrașcu <madalinionel.patrascu@mdc-berlin.de>
 ;;;
 ;;; This file is NOT part of GNU Guix, but is supposed to be used with GNU
 ;;; Guix and thus has the same license.
@@ -910,6 +911,40 @@ Sequence Analysis Tools (RSAT).")
               "The stand-alone version is freely available for academic
 users, with some restrictions on utilization (non-commercial,
 non-military and non-redistribution)."))))
+
+(define-public r-cellalign
+  (let ((commit "30fb085bcf45280e1706450e9cfcba3728cda6d8")
+        (revision "1"))
+    (package
+      (name "r-cellalign")
+      (version (git-version "0.1.0" revision commit))
+      (source
+       (origin
+         (method git-fetch)
+         (uri (git-reference
+                 (url "https://github.com/shenorrLabTRDF/cellAlign")
+                 (commit commit)))
+               (file-name (git-file-name name version))
+               (sha256
+                (base32
+                  "1v0ci71zbrmr1l2xmljdl6ks508fmhh6sdc3iglgd3cj16d0ahj6"))))
+      (properties `((upstream-name . "cellAlign")))
+      (build-system r-build-system)
+      (propagated-inputs
+        (list r-dtw
+              r-ggplot2
+              r-pheatmap
+              r-rcpp
+              r-reshape2))
+      (home-page "https://github.com/shenorrLabTRDF/cellAlign")
+      (synopsis "Global and local alignment of single cell trajectories")
+      (description
+       "More about what it does (maybe more than one line) Use four spaces when
+indenting paragraphs within the Description.")
+      (license (nonfree:non-free
+                    "The stand-alone version is freely available for academic
+users, with no restrictions beside usit \"for-profit\".  The users who intend
+to optain revenues by using this software are needed to buy a license.")))))
 
 (define-public r-loomr
   (let ((commit "df0144bd2bbceca6fadef9edc1bbc5ca672d4739")
