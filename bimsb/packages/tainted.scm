@@ -440,8 +440,8 @@ and all possible secondary structures.")
 ;; ViennaRNA, so we cannot add it to Guix upstream.
 ;; Currently fails to build: https://github.com/Ibvt/RNAnue/issues/13
 (define-public rnanue
-  (let ((commit "f8696dd44c42b67d1d24a0b9f99618cd9fbe7841")
-        (revision "2"))
+  (let ((commit "a3fd2876144b8bd9b2655eac399dd9b25ea8d355")
+        (revision "3"))
     (package
       (name "rnanue")
       (version (git-version "0.1.0" revision commit))
@@ -453,7 +453,7 @@ and all possible secondary structures.")
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "1gmvcyn9z2cj7qhnn783k7ns37rkh7bdrpgckqavv99s5a3ly3nw"))
+                  "0hvhqbl2xrkpxmzn3j7dkxfk2pvxai9xcmrnhw31wzfq53fdlnv6"))
                 (modules '((guix build utils)))
                 (snippet
                  '(delete-file-recursively "build"))))
