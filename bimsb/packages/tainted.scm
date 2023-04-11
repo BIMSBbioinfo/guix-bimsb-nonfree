@@ -1,5 +1,5 @@
 ;;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2019, 2020, 2022 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
+;;; Copyright © 2019, 2020, 2022, 2023 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
 ;;; Copyright © 2019, 2020, 2021 Marcel Schilling <marcel.schilling@uni-luebeck.de>
 ;;;
 ;;; This file is NOT part of GNU Guix, but is supposed to be used with GNU
@@ -52,6 +52,7 @@
   #:use-module (bimsb packages variants)
   #:use-module (bimsb packages bioinformatics-nonfree)
   #:use-module (non-free cuda)
+  #:use-module (guix-science packages bioinformatics)
   #:use-module (guix-science-nonfree packages bioconductor)
   #:use-module (guix-science-nonfree packages bioinformatics))
 
@@ -469,9 +470,9 @@ and all possible secondary structures.")
               (lambda _
                 (install-file "RNAnue" (string-append #$output "/bin")))))))
       (inputs
-       (list boost
+       (list boost-1.68
              segemehl
-             seqan
+             seqan-3.0.2
              viennarna))
       (home-page "https://github.com/Ibvt/RNAnue")
       (synopsis "Detect RNA-RNA interactions from Direct-Duplex-Detection data")
