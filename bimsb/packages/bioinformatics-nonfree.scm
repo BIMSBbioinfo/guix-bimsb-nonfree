@@ -1075,34 +1075,6 @@ cell types from single-cell RNA-seq data.")
     ;; under the GPLv3+.
     (license nonfree:undeclared)))
 
-(define-public python-genomic-regions
-  (package
-    (name "python-genomic-regions")
-    (version "0.0.10")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (pypi-uri "genomic_regions" version))
-       (sha256
-        (base32
-         "0hz811iyd1prml1r90qyzimmwyjwycwkjqw4vnl12bxy61rfzjz5"))))
-    (build-system python-build-system)
-    (propagated-inputs
-     (list python-future
-           python-intervaltree
-           python-numpy
-           python-pandas
-           python-pybedtools
-           python-pybigwig
-           python-pysam))
-	(native-inputs
-	 (list python-pytest))
-    (home-page "")
-    (synopsis "Consistently handle genomic regions")
-    (description
-     "Consistently handle genomic regions")
-    (license nonfree:undeclared)))
-
 (define-public fanc
   (let ((commit "012bdc08a6928cbf1542a7a11c224967e09cee8d")
 		(revision "0"))
