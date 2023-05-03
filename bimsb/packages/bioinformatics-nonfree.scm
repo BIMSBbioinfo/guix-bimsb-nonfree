@@ -76,30 +76,6 @@
   #:use-module (past packages perl)
   #:use-module (past packages python27))
 
-(define (other-perl-package-name other-perl)
-  "Return a procedure that returns NAME with a new prefix for
-OTHER-PERL instead of \"perl-\", when applicable."
-  (let ((other-perl-version (version-major+minor
-                             (package-version other-perl))))
-    (lambda (name)
-      (if (string-prefix? "perl-" name)
-          (string-append "perl" other-perl-version "-"
-                         (string-drop name
-                                      (string-length "perl-")))
-          name))))
-
-(define-public (package-for-other-perl other-perl pkg)
-  ;; This is a procedure to replace PERL by OTHER-PERL, recursively.
-  ;; It also ensures that rewritten packages are built with OTHER-PERL.
-  (let* ((rewriter (package-input-rewriting `((,perl . ,other-perl))
-                                            (other-perl-package-name other-perl)
-                                            #:deep? #false))
-         (new (rewriter pkg)))
-    (package (inherit new)
-      (arguments `(#:perl ,other-perl
-                   #:tests? #f ; oh well...
-                   ,@(package-arguments new))))))
-
 (define-public dinup
   (package
     (name "dinup")
