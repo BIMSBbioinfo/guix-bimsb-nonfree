@@ -51,7 +51,6 @@
   #:use-module (bimsb packages staging)
   #:use-module (bimsb packages variants)
   #:use-module (bimsb packages bioinformatics-nonfree)
-  #:use-module (non-free cuda)
   #:use-module (guix-science packages bioinformatics)
   #:use-module (guix-science-nonfree packages bioconductor)
   #:use-module (guix-science-nonfree packages bioinformatics))
@@ -480,56 +479,3 @@ and all possible secondary structures.")
        "RNAnue is a comprehensive analysis to detect RNA-RNA
 interactions from @dfn{Direct-Duplex-Detection} (DDD) data.")
       (license license:gpl3+))))
-
-;; TODO: this is not reproducible.
-(define-public bart-with-cuda
-  (package
-    (name "bart-with-cuda")
-    (version "0.7.00")
-    (source
-     (origin
-       (method git-fetch)
-       (uri (git-reference
-             (url "https://github.com/mrirecon/bart")
-             (commit "d1b0e576c3f759089915565d5bf57832acf7b03e")))
-       (file-name (git-file-name name version))
-       (sha256
-        (base32 "159rj3agr9pb9lg38b56rnw3d8wcbkmb2n718z26zpy4c6a6d9rn"))))
-    (build-system gnu-build-system)
-    (arguments
-     (list
-      #:test-target "utest"
-      #:make-flags #~(list
-                      (string-append "PREFIX=" #$output)
-                      "CUDA=1"
-                      (string-append "CUDA_BASE=" #$(this-package-input "cuda-toolkit"))
-                      "OPENBLAS=1"
-                      "SCALAPACK=1"
-                      (string-append "BLAS_BASE=" #$(this-package-input "openblas"))
-                      (string-append "FFTW_BASE=" #$(this-package-input "fftw")))
-      #:phases
-      #~(modify-phases %standard-phases
-          (delete 'configure)
-          (add-after 'unpack 'patch-/bin/bash
-            (lambda _
-              (substitute* "tests/pics.mk"
-                (("/bin/bash") (which "bash"))))))))
-    (inputs
-     (list cuda
-           fftw
-           fftwf
-           libpng
-           openblas
-           python
-           scalapack))
-    (native-inputs
-     (list gcc-8
-           doxygen
-           util-linux))                 ;for flock
-    (home-page "https://mrirecon.github.io/bart/")
-    (synopsis "Toolbox for computational magnetic resonance imaging")
-    (description "The Berkeley Advanced Reconstruction Toolbox (BART) is an
-image-reconstruction framework for Computational Magnetic Resonance Imaging.
-The tools in this software implement various reconstruction algorithms for
-Magnetic Resonance Imaging.")
-    (license license:bsd-3)))
