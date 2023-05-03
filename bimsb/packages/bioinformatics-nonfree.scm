@@ -1075,66 +1075,6 @@ cell types from single-cell RNA-seq data.")
     ;; under the GPLv3+.
     (license nonfree:undeclared)))
 
-(define-public fanc
-  (let ((commit "012bdc08a6928cbf1542a7a11c224967e09cee8d")
-		(revision "0"))
-	(package
-	  (name "fanc")
-	  (version (git-version "0" revision commit))
-	  (source (origin
-				(method git-fetch)
-				(uri (git-reference
-					  (url "https://github.com/vaquerizaslab/fanc.git")
-					  (commit commit)))
-				(file-name (git-file-name name version))
-				(sha256
-				 (base32
-				  "0iqigh59cy7wpqrqwx66za2ch00gry3xp9n8mkg5s4c6sw23ii8f"))))
-	  (build-system python-build-system)
-	  (arguments
-       `(#:phases
-		 (modify-phases %standard-phases
-           (replace 'check
-			 (lambda* (#:key tests? #:allow-other-keys)
-               (when tests?
-				 ;; XXX: some of the tests here just take forever
-				 (delete-file "fanc/test/test_matrix.py")
-				 (invoke "pytest" "-vvv" "-m" "not longrunning")))))))
-	  (propagated-inputs
-	   (list python-biopython
-		     python-cooler
-		     python-future
-		     python-genomic-regions
-		     python-gridmap
-		     python-h5py
-		     python-imageio
-		     python-intervaltree
-		     python-matplotlib
-		     python-msgpack
-		     python-msgpack-numpy
-             python-numpy
-		     python-pandas
-		     python-pillow
-		     python-progressbar2
-		     python-pybedtools
-		     python-pybigwig
-		     python-pysam
-		     python-pywavelets
-		     python-pyyaml
-		     python-scikit-image
-		     python-scikit-learn
-		     python-scipy
-		     python-seaborn
-		     python-tables
-		     python-tifffile))
-	  (native-inputs
-	   (list python-cython python-pytest))
-	  (home-page "https://github.com/vaquerizaslab/fanc")
-	  (synopsis "Framework for the analysis of C-like data")
-	  (description "FAN-C provides a pipeline for analysing Hi-C data
-starting at mapped paired-end sequencing reads.")
-	  (license (nonfree:non-free "Non-commercial")))))
-
 ;; This perl script has no license declared but contains an 'All Rights
 ;; Reserved' Copyright statement.
 (define-public targetscan
