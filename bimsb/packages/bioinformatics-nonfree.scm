@@ -980,11 +980,11 @@ and modify loom files.  loomR aims to be completely compatible with loompy.")
 
 ;; The latest release is from 2019 and still at version 1.1.2.
 (define-public r-scenic
-  (let ((commit "0585e873d7f17d35e7172f6f3e7e369f9820ef14")
+  (let ((commit "06d3f34093aff4d477408f687d00d34a1738c71e")
         (revision "1"))
     (package
       (name "r-scenic")
-      (version (git-version "1.2.4" revision commit))
+      (version (git-version "1.3.1" revision commit))
       (source
        (origin
          (method git-fetch)
@@ -994,19 +994,22 @@ and modify loom files.  loomR aims to be completely compatible with loompy.")
          (file-name (git-file-name name version))
          (sha256
           (base32
-           "0zkwffx40wxkv0zg8lnzr6m4j8zjkjs26dgbq1pzvnaxj5j6gbnl"))))
+           "1xsmisab9kdy1jcm93c0dirmdkm662003k1ikamig00cchqi9cpj"))))
       (properties `((upstream-name . "SCENIC")))
       (build-system r-build-system)
       (propagated-inputs
-       `(("r-aucell" ,r-aucell)
-         ("r-data-table" ,r-data-table)
-         ("r-dynamictreecut" ,r-dynamictreecut)
-         ("r-genie3" ,r-genie3)
-         ("r-mixtools" ,r-mixtools)
-         ("r-nmf" ,r-nmf)
-         ("r-rcistarget" ,r-rcistarget)
-         ("r-rtsne" ,r-rtsne)
-         ("r-singlecellexperiment" ,r-singlecellexperiment)))
+       (list r-aucell
+             r-data-table
+             r-dynamictreecut
+             r-genie3
+             r-ggrepel
+             r-mixtools
+             r-nmf
+             r-rcistarget
+             r-rtsne
+             r-singlecellexperiment))
+      (native-inputs
+       (list r-knitr))
       (home-page "https://github.com/aertslab/SCENIC")
       (synopsis "Single cell regulatory network inference and clustering")
       (description "SCENIC (Single-cell regulatory network inference
