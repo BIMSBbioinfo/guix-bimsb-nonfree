@@ -664,10 +664,6 @@ available for the 7 continuous distributions.")
     ;; non-commercial only.  It is unclear which is which.
     (license nonfree:undeclared)))
 
-;; For harm
-(define-public perl5.24-math-cdf
-  (package-for-other-perl perl-5.24 perl-math-cdf))
-
 (define-public rsat
   (package
     (name "rsat")
