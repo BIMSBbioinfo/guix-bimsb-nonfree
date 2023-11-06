@@ -131,20 +131,19 @@ particularly an issue.")
 (define-public r-translatome
   (package
     (name "r-translatome")
-    (version "1.22.0")
+    (version "1.40.0")
     (source
      (origin
        (method url-fetch)
        (uri (bioconductor-uri "tRanslatome" version))
        (sha256
-        (base32
-         "169nizkxgs9dyhyria6354jvxr9hmqq2y00kgril4sa0kkhwma4y"))))
+        (base32 "08fdamgafp2cjp6sp6lpknyfl243sp32xqmgbazm0x3qxf4fr9k0"))))
     (properties `((upstream-name . "tRanslatome")))
     (build-system r-build-system)
     (propagated-inputs
      (list r-anota
            r-biobase
-           r-deseq
+           r-deseq2
            r-edger
            r-gosemsim
            r-gplots
@@ -152,8 +151,7 @@ particularly an issue.")
            r-limma
            r-org-hs-eg-db
            r-plotrix
-           r-rankprod                   ; non-free
-           r-sigpathway
+           r-rankprod                   ;non-free
            r-topgo))
     (home-page "https://bioconductor.org/packages/tRanslatome/")
     (synopsis "Comparison between multiple levels of gene expression")
