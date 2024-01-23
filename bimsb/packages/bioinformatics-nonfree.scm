@@ -638,45 +638,6 @@ and modify loom files.  loomR aims to be completely compatible with loompy.")
       ;; should consider it licensed under the non-free DBAD license.
       (license (nonfree:non-free "https://dbad-license.org")))))
 
-;; The latest release is from 2019 and still at version 1.1.2.
-(define-public r-scenic
-  (let ((commit "06d3f34093aff4d477408f687d00d34a1738c71e")
-        (revision "1"))
-    (package
-      (name "r-scenic")
-      (version (git-version "1.3.1" revision commit))
-      (source
-       (origin
-         (method git-fetch)
-         (uri (git-reference
-               (url "https://github.com/aertslab/SCENIC")
-               (commit commit)))
-         (file-name (git-file-name name version))
-         (sha256
-          (base32
-           "1xsmisab9kdy1jcm93c0dirmdkm662003k1ikamig00cchqi9cpj"))))
-      (properties `((upstream-name . "SCENIC")))
-      (build-system r-build-system)
-      (propagated-inputs
-       (list r-aucell
-             r-data-table
-             r-dynamictreecut
-             r-genie3
-             r-ggrepel
-             r-mixtools
-             r-nmf
-             r-rcistarget
-             r-rtsne
-             r-singlecellexperiment))
-      (native-inputs
-       (list r-knitr))
-      (home-page "https://github.com/aertslab/SCENIC")
-      (synopsis "Single cell regulatory network inference and clustering")
-      (description "SCENIC (Single-cell regulatory network inference
-and clustering) is an R package to infer Gene Regulatory Networks and
-cell types from single-cell RNA-seq data.")
-      (license (nonfree:non-free "Non-commercial")))))
-
 (define-public cermit
   (package
     (name "cermit")
