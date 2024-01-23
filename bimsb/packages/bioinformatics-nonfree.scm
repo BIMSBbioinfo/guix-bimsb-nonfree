@@ -1,5 +1,5 @@
 ;;; GNU Guix --- Functional package management for GNU
-;;; Copyright © 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
+;;; Copyright © 2015-2024 Ricardo Wurmus <ricardo.wurmus@mdc-berlin.de>
 ;;; Copyright © 2017 CM Massimo <carlomaria.massimo@mdc-berlin.de>
 ;;; Copyright © 2018, 2019, 2021 Marcel Schilling <marcel.schilling@uni-luebeck.de>
 ;;; Copyright © 2023 Mădălin Ionel Patrașcu <madalinionel.patrascu@mdc-berlin.de>
@@ -443,11 +443,12 @@ experiments.")
                           "/lib"))
          #:phases
          '(modify-phases %standard-phases
-            (add-after 'unpack 'fix-library-detection
+            (add-after 'unpack 'fix-build-system
               (lambda _
-                (substitute* "ax_boost_system.m4"
-                  (("BOOSTLIBDIR/boost_system")
-                   "BOOSTLIBDIR/libboost_system"))
+                (setenv "CFLAGS" "-fcommon")
+                ;; Remove duplicate AM_INIT_AUTOMAKE macro.
+                (substitute* "configure.ac"
+                  (("AM_INIT_AUTOMAKE\n") ""))
                 ;; The includes for "eigen" are located in a subdirectory.
                 (substitute* "ax_check_eigen.m4"
                   (("ac_eigen_path/include")
@@ -470,9 +471,7 @@ experiments.")
              python-2
              zlib))
       (native-inputs
-       (list autoconf
-             automake
-             gcc-7))
+       (list autoconf automake))
       (home-page "http://cole-trapnell-lab.github.io/cufflinks/")
       (synopsis "Transcriptome assembly and RNA-Seq expression analysis")
       (description
