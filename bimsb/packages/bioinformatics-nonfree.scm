@@ -291,7 +291,7 @@ structural and functional information.")
       #~(list "ZLIB=-lz"
               (string-append "BAMTOOLSSRC="
                              #$(this-package-input "bamtools")
-                             "/lib/bamtools/libbamtools.a")
+                             "/lib/libbamtools.so")
               (string-append "BAMTOOLSDIR="
                              #$(this-package-input "bamtools")
                              "/include/bamtools"))
@@ -332,10 +332,11 @@ structural and functional information.")
                    "matealign"
                    "bamfastq"))))))))
     (inputs
-     (list zlib
-           boost
-           bamtools-2.0
-           samtools-0.1))
+     (list bamtools
+           boost-1.68
+           samtools-0.1
+           zlib))
+    (native-inputs (list gcc-8))
     (home-page "https://bitbucket.org/dranew/defuse")
     (synopsis "Gene fusion discovery using RNA-Seq data")
     (description "deFuse is a software package for gene fusion
