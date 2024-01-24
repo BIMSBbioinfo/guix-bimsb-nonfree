@@ -48,8 +48,6 @@
   #:use-module (gnu packages python)
   #:use-module (gnu packages ruby)
   #:use-module (gnu packages statistics)
-  #:use-module (bimsb packages staging)
-  #:use-module (bimsb packages variants)
   #:use-module (bimsb packages bioinformatics-nonfree)
   #:use-module (guix-science packages bioinformatics)
   #:use-module (guix-science-nonfree packages bioconductor)
