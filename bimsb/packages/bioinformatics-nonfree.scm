@@ -387,60 +387,6 @@ available for the 7 continuous distributions.")
     ;; non-commercial only.  It is unclear which is which.
     (license nonfree:undeclared)))
 
-(define-public rsat
-  (package
-    (name "rsat")
-    (version "2018-06-07")
-    (source (origin
-              (method url-fetch)
-              (uri (list (string-append "http://pedagogix-tagc.univ-mrs.fr/"
-                                        "download_rsat/rsat_"
-                                        version ".tar.gz")
-                         (string-append "http://pedagogix-tagc.univ-mrs.fr/"
-                                        "download_rsat/previous_versions/rsat_"
-                                        version ".tar.gz")))
-              (sha256
-               (base32
-                "0zzlfl19ylj06np8hhmkjavv7906nk58ngg5irc37jr03p346l3x"))))
-    (build-system gnu-build-system)
-    (arguments
-     (list
-      #:tests? #f                       ; no test target
-      #:phases
-      #~(modify-phases %standard-phases
-          (replace 'configure
-            (lambda _
-              ;; Ensure that we can override the target directory
-              (substitute* "perl-scripts/configure_rsat.pl"
-                (("\\$rsat_parent_path = .*;")
-                 (string-append "$rsat_parent_path = \""
-                                #$output "\";")))
-              ;; Override the target directory
-              (setenv "RSAT" #$output)
-              ;; Target directory must exist
-              (mkdir-p "bin")
-              (invoke "perl" "perl-scripts/configure_rsat.pl")))
-          (replace 'build
-            (lambda _
-              ;; FIXME: this first step is pretty useless, because it
-              ;; creates directories not in the install location but in
-              ;; the build directory.
-              (invoke "make" "-f" "makefiles/init_rsat.mk" "init")
-              (invoke "make" "-f" "makefiles/init_rsat.mk" "compile_all")))
-          (replace 'install
-            (lambda _
-              (copy-recursively "bin" (string-append #$output "/bin")))))))
-    (native-inputs
-     (list perl))
-    (home-page "http://rsat.eead.csic.es/plants/")
-    (synopsis "Regulatory sequence analysis tools")
-    (description "This package provides a subset of the Regulatory
-Sequence Analysis Tools (RSAT).")
-    (license (nonfree:non-free
-              "The stand-alone version is freely available for academic
-users, with some restrictions on utilization (non-commercial,
-non-military and non-redistribution)."))))
-
 (define-public cermit
   (package
     (name "cermit")
