@@ -460,38 +460,6 @@ Sequence Analysis Tools (RSAT).")
 users, with some restrictions on utilization (non-commercial,
 non-military and non-redistribution)."))))
 
-(define-public r-loomr
-  (let ((commit "df0144bd2bbceca6fadef9edc1bbc5ca672d4739")
-        (revision "1"))
-    (package
-      (name "r-loomr")
-      (version (git-version "0.2.0" revision commit))
-      (source
-       (origin
-         (method git-fetch)
-         (uri (git-reference
-               (url "https://github.com/mojaveazure/loomR.git")
-               (commit commit)))
-         (file-name (git-file-name name version))
-         (sha256
-          (base32
-           "1b1g4dlmfdyhn56bz1mkh9ymirri43wiz7rjhs7py3y7bdw1s3yr"))))
-      (build-system r-build-system)
-      (propagated-inputs
-       (list r-r6
-             r-hdf5r
-             r-iterators
-             r-itertools
-             r-matrix))
-      (home-page "https://github.com/mojaveazure/loomR")
-      (synopsis "R interface for loom files")
-      (description "This package provides an R interface to access, create,
-and modify loom files.  loomR aims to be completely compatible with loompy.")
-      ;; The DESCRIPTION file says GPL-3, but according to the author
-      ;; they haven't decided an a final license yet.  For now we
-      ;; should consider it licensed under the non-free DBAD license.
-      (license (nonfree:non-free "https://dbad-license.org")))))
-
 (define-public cermit
   (package
     (name "cermit")
