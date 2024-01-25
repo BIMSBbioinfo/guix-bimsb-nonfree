@@ -112,25 +112,6 @@ false discovery rate as a cutoff when two samples have different sequencing
 depths and differentiate reliable RDNPs from the background noise.")
     (license nonfree:artistic1.0)))
 
-(define-public macs-1
-  (package (inherit macs)
-    (name "macs")
-    (version "1.4.3")
-    (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "https://pypi.python.org/packages/source/M/MACS/MACS-"
-                    version ".tar.gz"))
-              (sha256
-               (base32
-                "17lbf76gkisrxhnjwf8iw4pvinny2376dp9dyrgald2l0ww6s4d9"))
-              (patches (list (search-patch "macs-1.4-fix-parser.patch")))))
-    (build-system python-build-system)
-    (arguments `(#:tests? #false #:python ,python-2))
-    (inputs '())
-    (native-inputs '())
-    (license nonfree:artistic1.0)))
-
 (define-public fstitch
   (let ((commit "7c65fd973f1d04d83cd48dd5561c4e40c14dd8c6")
         (revision "1"))
