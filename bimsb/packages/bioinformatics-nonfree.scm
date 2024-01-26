@@ -37,6 +37,7 @@
   #:use-module (guix build-system r)
   #:use-module (bimsb packages staging)
   #:use-module (bimsb packages tainted)
+  #:use-module (bimsb packages variants)
   #:use-module (gnu packages)
   #:use-module (gnu packages admin)
   #:use-module (gnu packages algebra)
